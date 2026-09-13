@@ -1,0 +1,33 @@
+.main-layout {
+    min-height: 100vh;
+}
+
+.main-area {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.3s ease;
+}
+
+.sidebar-is-open .main-area {
+    margin-left: 300px;
+}
+
+.sidebar-is-open .header {
+    left: 300px;
+}
+
+.page-content {
+    flex: 1;
+    padding-top: 70px;
+}
+
+@media (max-width: 900px) {
+    .sidebar-is-open .main-area {
+        margin-left: 0;
+    }
+
+    .sidebar-is-open .header {
+        left: 0;
+    }
+}

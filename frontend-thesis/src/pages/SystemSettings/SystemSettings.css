@@ -1,0 +1,883 @@
+/* =========================================================
+   SYSTEM SETTINGS
+   ========================================================= */
+
+.system-settings-page {
+  min-height: 100%;
+  padding: 32px;
+  box-sizing: border-box;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(101, 11, 32, 0.08),
+      transparent 30%
+    ),
+    var(--color-background);
+
+  color: var(--color-text);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 28px;
+}
+
+.settings-eyebrow {
+  margin-bottom: 7px;
+
+  color: var(--color-primary);
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.settings-header h1 {
+  margin: 0;
+
+  color: #1b0f15;
+
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1.15;
+}
+
+.settings-header p {
+  margin: 8px 0 0;
+
+  color: var(--color-text-secondary);
+
+  font-size: 14px;
+}
+
+.settings-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 15px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+
+  background: var(--color-surface);
+
+  color: #6d5960;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: #4b8b62;
+  box-shadow: 0 0 0 4px rgba(75, 139, 98, 0.1);
+}
+
+
+/* =========================================================
+   LAYOUT
+   ========================================================= */
+
+.settings-layout {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    300px;
+
+  gap: 22px;
+
+  max-width: 1250px;
+}
+
+.settings-main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.settings-card {
+  padding: 25px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+
+  background: var(--color-surface);
+
+  box-shadow:
+    0 8px 28px rgba(64, 20, 31, 0.05);
+}
+
+.card-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+
+  margin-bottom: 24px;
+}
+
+.card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 43px;
+  height: 43px;
+
+  flex-shrink: 0;
+
+  border-radius: 12px;
+
+  background: var(--color-primary-soft);
+
+  font-size: 19px;
+}
+
+.card-heading h2 {
+  margin: 0;
+
+  color: var(--color-primary-dark);
+
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.card-heading p {
+  margin: 5px 0 0;
+
+  color: #938387;
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   PASSWORD FORM
+   ========================================================= */
+
+.password-form {
+  max-width: 680px;
+}
+
+.form-group {
+  margin-bottom: 19px;
+}
+
+.form-group label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #5d484e;
+
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.password-input {
+  position: relative;
+}
+
+.password-input input {
+  width: 100%;
+  height: 46px;
+
+  box-sizing: border-box;
+
+  padding: 0 65px 0 14px;
+
+  border: 1px solid #e5dadd;
+  border-radius: 10px;
+
+  outline: none;
+
+  background: #fcfafb;
+
+  color: #422b31;
+
+  font-family: inherit;
+  font-size: 12px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.password-input input:focus {
+  border-color: #8b1e3f;
+
+  box-shadow:
+    0 0 0 3px rgba(139, 30, 63, 0.08);
+
+  background: #ffffff;
+}
+
+.password-input input::placeholder {
+  color: #b0a3a7;
+}
+
+.show-password {
+  position: absolute;
+
+  top: 50%;
+  right: 12px;
+
+  transform: translateY(-50%);
+
+  padding: 4px 5px;
+
+  border: none;
+  background: transparent;
+
+  color: #75152f;
+
+  font-size: 10px;
+  font-weight: 750;
+
+  cursor: pointer;
+}
+
+.show-password:hover {
+  color: #4f0d21;
+}
+
+
+/* =========================================================
+   PASSWORD STRENGTH
+   ========================================================= */
+
+.password-strength {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  margin-top: 8px;
+}
+
+.strength-bars {
+  display: flex;
+  gap: 4px;
+}
+
+.strength-bars span {
+  width: 42px;
+  height: 4px;
+
+  border-radius: 10px;
+
+  background: #e9e1e3;
+}
+
+.strength-bars .strength-active {
+  background: #8b1e3f;
+}
+
+.strength-text-1 {
+  color: #a64c4c;
+}
+
+.strength-text-2 {
+  color: #9a713b;
+}
+
+.strength-text-3 {
+  color: #6e753b;
+}
+
+.strength-text-4 {
+  color: #39714e;
+}
+
+.strength-label {
+  font-size: 9px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   PASSWORD REQUIREMENTS
+   ========================================================= */
+
+.password-requirements {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 6px 15px;
+
+  margin-top: 10px;
+
+  color: #9a8b90;
+
+  font-size: 9px;
+}
+
+.password-requirements span::first-letter {
+  color: #7b1834;
+}
+
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
+.settings-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin: 15px 0;
+
+  padding: 11px 13px;
+
+  border-radius: 9px;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.settings-message.success {
+  border: 1px solid #d8eadf;
+
+  background: #f0f8f3;
+
+  color: #39714e;
+}
+
+.settings-message.error {
+  border: 1px solid #eed7d7;
+
+  background: #fcf2f2;
+
+  color: #9b4141;
+}
+
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+.primary-button {
+  height: 43px;
+
+  padding: 0 20px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: linear-gradient(
+    135deg,
+    #5b0f25,
+    #811b3b
+  );
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 7px 15px rgba(91, 15, 37, 0.16);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.primary-button:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 20px rgba(91, 15, 37, 0.22);
+}
+
+
+/* =========================================================
+   SECURITY PREFERENCES
+   ========================================================= */
+
+.setting-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 16px 0;
+
+  border-top: 1px solid #f0e9eb;
+}
+
+.setting-option:first-of-type {
+  border-top: none;
+}
+
+.setting-info {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  padding-right: 20px;
+}
+
+.setting-info strong {
+  color: #5a4047;
+
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.setting-info span {
+  color: #9c8e92;
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   TOGGLE
+   ========================================================= */
+
+.toggle {
+  position: relative;
+
+  width: 43px;
+  height: 23px;
+
+  flex-shrink: 0;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 30px;
+
+  background: #d9ced1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease;
+}
+
+.toggle span {
+  position: absolute;
+
+  top: 3px;
+  left: 3px;
+
+  width: 17px;
+  height: 17px;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+
+  transition:
+    transform 0.2s ease;
+}
+
+.toggle-on {
+  background: #73152f;
+}
+
+.toggle-on span {
+  transform: translateX(20px);
+}
+
+
+/* =========================================================
+   SYSTEM INFORMATION
+   ========================================================= */
+
+.system-information {
+  border-top: 1px solid #f0e9eb;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 48px;
+
+  border-bottom: 1px solid #f0e9eb;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-row span {
+  color: #97898d;
+
+  font-size: 10px;
+}
+
+.info-row strong {
+  color: #5b4148;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  text-align: right;
+}
+
+.role-badge {
+  padding: 5px 9px;
+
+  border-radius: 20px;
+
+  background: #f5e9ed;
+
+  color: #75152f !important;
+
+  font-size: 9px !important;
+}
+
+
+/* =========================================================
+   RIGHT SIDEBAR
+   ========================================================= */
+
+.settings-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+
+/* =========================================================
+   SECURITY SUMMARY
+   ========================================================= */
+
+.security-summary {
+  position: relative;
+
+  overflow: hidden;
+
+  padding: 24px;
+
+  border-radius: 18px;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(255, 255, 255, 0.15),
+      transparent 40%
+    ),
+    linear-gradient(
+      145deg,
+      #530d22,
+      #7c1737
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 12px 28px rgba(83, 13, 34, 0.18);
+}
+
+.shield {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 47px;
+  height: 47px;
+
+  margin-bottom: 17px;
+
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.13);
+
+  font-size: 20px;
+}
+
+.security-summary h3 {
+  margin: 0;
+
+  font-size: 17px;
+}
+
+.security-summary p {
+  margin: 8px 0 19px;
+
+  color: rgba(255, 255, 255, 0.68);
+
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.security-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-top: 10px;
+
+  color: rgba(255, 255, 255, 0.86);
+
+  font-size: 9px;
+}
+
+.security-line span {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+}
+
+
+/* =========================================================
+   SECURITY TIPS
+   ========================================================= */
+
+.tips-card {
+  padding: 20px;
+
+  border: 1px solid #eee4e7;
+  border-radius: 17px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 6px 20px rgba(64, 20, 31, 0.04);
+}
+
+.tips-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  color: #5a1027;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.tips-title span {
+  color: #8b1e3f;
+}
+
+.tips-card ul {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+
+  margin: 16px 0 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.tips-card li {
+  position: relative;
+
+  padding-left: 14px;
+
+  color: #8c7d82;
+
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.tips-card li::before {
+  content: "•";
+
+  position: absolute;
+
+  left: 0;
+
+  color: #8b1e3f;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   SIDEBAR ACTIONS
+   ========================================================= */
+
+.settings-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.save-settings,
+.reset-settings {
+  width: 100%;
+  height: 40px;
+
+  border-radius: 9px;
+
+  font-family: inherit;
+
+  font-size: 10px;
+  font-weight: 750;
+
+  cursor: pointer;
+}
+
+.save-settings {
+  border: none;
+
+  background: #68132d;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 6px 14px rgba(91, 15, 37, 0.13);
+}
+
+.save-settings:hover {
+  background: #4f0d21;
+}
+
+.reset-settings {
+  border: 1px solid #e4d8dc;
+
+  background: #ffffff;
+
+  color: #7c666d;
+}
+
+.reset-settings:hover {
+  border-color: #cdbbc1;
+
+  color: #5b0f25;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1050px) {
+  .settings-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-sidebar {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .settings-actions {
+    grid-column: span 2;
+
+    flex-direction: row;
+  }
+
+  .settings-actions button {
+    flex: 1;
+  }
+}
+
+
+@media (max-width: 700px) {
+  .system-settings-page {
+    padding: 20px;
+  }
+
+  .settings-header {
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .settings-header h1 {
+    font-size: 26px;
+  }
+
+  .settings-status {
+    display: none;
+  }
+
+  .settings-card {
+    padding: 19px;
+  }
+
+  .settings-sidebar {
+    display: flex;
+  }
+
+  .settings-actions {
+    flex-direction: column;
+  }
+
+  .settings-actions button {
+    width: 100%;
+  }
+
+  .password-requirements {
+    grid-template-columns: 1fr;
+  }
+
+  .info-row {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+
+    padding: 10px 0;
+  }
+
+  .info-row strong {
+    text-align: left;
+  }
+}
+
+
+@media (max-width: 450px) {
+  .system-settings-page {
+    padding: 14px;
+  }
+
+  .settings-header h1 {
+    font-size: 23px;
+  }
+
+  .card-heading {
+    gap: 10px;
+  }
+
+  .card-icon {
+    width: 38px;
+    height: 38px;
+
+    font-size: 16px;
+  }
+
+  .strength-bars span {
+    width: 30px;
+  }
+}

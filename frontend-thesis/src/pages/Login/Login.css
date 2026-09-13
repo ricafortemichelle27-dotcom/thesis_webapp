@@ -1,0 +1,494 @@
+/* ================================
+   LOGIN PAGE
+================================ */
+
+
+
+
+/* ================================
+   LOGIN CARD
+================================ */
+
+.login-card {
+    width: 100%;
+    max-width: 1200px;
+    height: 750px;
+
+    display: flex;
+
+    background-color: var(--color-surface);
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 15px 40px rgba(70, 0, 15, 0.35);
+}
+
+
+/* ================================
+   LEFT SIDE - BUILDING IMAGE
+================================ */
+
+.login-left {
+    width: 55%;
+    height: 100%;
+
+    position: relative;
+
+    overflow: hidden;
+
+    background-color: var(--color-primary);
+}
+
+
+/* ================================
+   BUILDING IMAGE
+================================ */
+
+.login-left-photo {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+    /*
+       Fade the bottom of the
+       building photo.
+    */
+
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        black 0%,
+        black 52%,
+        rgba(0, 0, 0, 0.85) 65%,
+        rgba(0, 0, 0, 0.45) 80%,
+        rgba(0, 0, 0, 0.10) 92%,
+        transparent 100%
+    );
+
+    mask-image: linear-gradient(
+        to bottom,
+        black 0%,
+        black 52%,
+        rgba(0, 0, 0, 0.85) 65%,
+        rgba(0, 0, 0, 0.45) 80%,
+        rgba(0, 0, 0, 0.10) 92%,
+        transparent 100%
+    );
+}
+
+
+/* ================================
+   MAROON FADE AT BOTTOM
+================================ */
+
+.login-left::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 48%;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(114, 13, 36, 0) 0%,
+        rgba(114, 13, 36, 0.15) 25%,
+        rgba(114, 13, 36, 0.65) 65%,
+        var(--color-primary) 100%
+    );
+
+    pointer-events: none;
+}
+
+
+/* ================================
+   TAGLINE
+================================ */
+
+.login-left::before {
+    content: "Learning Beyond Borders";
+
+    position: absolute;
+
+    left: 50%;
+    bottom: 40px;
+
+    transform: translateX(-50%);
+
+    width: 90%;
+
+    z-index: 5;
+
+    text-align: center;
+
+    color: #ffffff;
+
+    font-size: 32px;
+
+    font-weight: 600;
+
+    font-style: italic;
+
+    letter-spacing: 1px;
+
+    text-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.5);
+}
+
+
+/* ================================
+   RIGHT SIDE - FORM CONTAINER
+================================ */
+
+.login-form-container {
+    width: 45%;
+    height: 100%;
+
+    background: linear-gradient(
+        135deg,
+        var(--color-surface) 0%,
+        #fffafa 65%,
+        #f8e9ed 100%
+    );
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    padding: 60px;
+}
+
+
+/* ================================
+   LOGIN FORM
+================================ */
+
+.login-form {
+    width: 100%;
+    max-width: 420px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+
+/* ================================
+   GREETING
+================================ */
+
+.text-greeting {
+    font-size: 32px;
+
+    font-weight: 700;
+
+    color: #720d24;
+
+    margin-bottom: 18px;
+
+    line-height: 1.2;
+}
+
+
+/* ================================
+   INSTRUCTION TEXT
+================================ */
+
+.text-instruction {
+    font-size: 15px;
+
+    line-height: 1.7;
+
+    color: #666666;
+
+    margin-bottom: 35px;
+}
+
+
+/* ================================
+   INPUT CONTAINER
+================================ */
+
+.input-login-container {
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+
+/* ================================
+   INPUT FIELDS
+================================ */
+
+.input-login {
+    width: 100%;
+
+    height: 52px;
+
+    padding: 0 18px;
+
+    border: 2px solid #e3cbd2;
+
+    border-radius: 10px;
+
+    background-color: #ffffff;
+
+    font-size: 15px;
+
+    color: #333333;
+
+    outline: none;
+
+    transition: all 0.25s ease;
+}
+
+
+/* Placeholder */
+
+.input-login::placeholder {
+    color: #999999;
+}
+
+
+/* Input focus */
+
+.input-login:focus {
+    border-color: #8d1731;
+
+    background-color: #ffffff;
+
+    box-shadow:
+        0 0 0 3px rgba(123, 13, 30, 0.12);
+}
+
+
+/* ================================
+   LOGIN BUTTON
+================================ */
+
+.login-button {
+    width: 100%;
+
+    height: 54px;
+
+    margin-top: 30px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: linear-gradient(
+        135deg,
+        #9b1837,
+        #720d24
+    );
+
+    color: #ffffff;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+
+    box-shadow:
+        0 7px 18px rgba(114, 13, 36, 0.30);
+}
+
+
+/* Button hover */
+
+.login-button:hover {
+    background: linear-gradient(
+        135deg,
+        #b21d40,
+        #86112b
+    );
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 22px rgba(114, 13, 36, 0.40);
+}
+
+
+/* Button click */
+
+.login-button:active {
+    transform: translateY(0);
+
+    box-shadow:
+        0 5px 12px rgba(114, 13, 36, 0.25);
+}
+
+
+/* ================================
+   TABLET
+================================ */
+
+@media (max-width: 900px) {
+
+    .login-card {
+        width: 95%;
+        height: 600px;
+    }
+
+    .login-left {
+        width: 50%;
+    }
+
+    .login-form-container {
+        width: 50%;
+
+        padding: 40px;
+    }
+
+    .login-form {
+        max-width: 380px;
+    }
+
+    .text-greeting {
+        font-size: 28px;
+    }
+
+    .text-instruction {
+        font-size: 14px;
+    }
+
+    .login-left::before {
+        font-size: 26px;
+    }
+}
+
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 700px) {
+
+    body {
+        padding: 20px;
+    }
+
+    .login-card {
+        width: 100%;
+        height: auto;
+
+        min-height: 700px;
+
+        flex-direction: column;
+    }
+
+    .login-left {
+        width: 100%;
+        height: 280px;
+    }
+
+    .login-form-container {
+        width: 100%;
+        height: auto;
+
+        padding: 40px 30px;
+    }
+
+    .login-form {
+        width: 100%;
+        max-width: none;
+    }
+
+    .text-greeting {
+        font-size: 26px;
+    }
+
+    .text-instruction {
+        font-size: 14px;
+    }
+
+    .login-left::before {
+        bottom: 25px;
+
+        font-size: 24px;
+    }
+}
+
+
+/* ================================
+   PASSWORD VISIBILITY
+================================ */
+
+.password-login-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-login-input {
+    padding-right: 54px;
+}
+
+.password-visibility-button {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transform: translateY(-50%);
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #720d24;
+    cursor: pointer;
+}
+
+.password-visibility-button:hover,
+.password-visibility-button:focus-visible {
+    background: #f5e8ec;
+    outline: none;
+}
+
+
+/* ================================
+   FORGOT PASSWORD
+================================ */
+
+.forgot-password-button {
+    align-self: center;
+    margin-top: 16px;
+    padding: 4px 8px;
+    border: none;
+    background: transparent;
+    color: #720d24;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.forgot-password-button:hover,
+.forgot-password-button:focus-visible {
+    color: #570f25;
+    text-decoration: underline;
+    outline: none;
+}

@@ -1,0 +1,62 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import {
+    faBell,
+    faUser,
+    faUsers,
+    faBars,
+    faXmark,
+    faGauge,
+    faTools,
+    faCalendarDays,
+    faChartPie,
+    faCertificate,
+    faClipboardCheck,
+    faGear,
+    faHandHolding,
+    faBoxOpen,
+    faChartColumn,
+    faEye,
+    faEyeSlash,
+    faCalendarWeek,
+    faSearch,
+    faCheck,
+    faTrash,
+    faFilePdf,
+    faClock,
+    faUpload,
+    faEllipsisVertical,
+    faPaperPlane
+} from "@fortawesome/free-solid-svg-icons";
+
+export {
+    FontAwesomeIcon,
+    faCalendarWeek,
+    faBell,
+    faUser,
+    faBars,
+    faXmark,
+    faGauge,
+    faTools,
+    faCalendarDays,
+    faChartPie,
+    faCertificate,
+    faClipboardCheck,
+    faGear,
+    faHandHolding,
+    faBoxOpen,
+    faChartColumn,
+    faEye,
+    faEyeSlash,
+    faUsers,
+    faSearch,
+    faCheck,
+    faTrash,
+    faFilePdf,
+    faClock,
+    faUpload,
+    faEllipsisVertical,
+    faPaperPlane
+};
+
+export const faCertificates = faCertificate;

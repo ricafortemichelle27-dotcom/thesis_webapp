@@ -1,0 +1,312 @@
+/* =========================================
+   ADD ADMIN OVERLAY
+========================================= */
+
+.add-admin-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  background: rgba(36, 5, 15, 0.72);
+  backdrop-filter: blur(4px);
+  overflow-y: auto;
+}
+
+
+/* =========================================
+   MODAL
+========================================= */
+
+.add-admin-modal {
+  width: 100%;
+  max-width: 520px;
+  background: #650b20;
+  border-radius: 18px;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  animation: addAdminModalOpen 0.2s ease-out;
+}
+
+
+/* =========================================
+   MODAL ANIMATION
+========================================= */
+
+@keyframes addAdminModalOpen {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.add-admin-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 24px 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.add-admin-header h2 {
+  margin: 0;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.add-admin-header p {
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+
+/* =========================================
+   CLOSE BUTTON
+========================================= */
+
+.add-admin-close {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.add-admin-close:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.add-admin-form {
+  padding: 28px;
+}
+
+
+/* =========================================
+   FORM GROUP
+========================================= */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 19px;
+  gap: 0;
+}
+
+.form-group label {
+  margin-bottom: 7px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-group label span {
+  margin-left: 3px;
+  color: #f4c430;
+}
+
+
+/* =========================================
+   INPUT AND SELECT
+========================================= */
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  height: 46px;
+  padding: 0 13px;
+  box-sizing: border-box;
+  border: 1px solid #e7e7e7;
+  border-radius: 9px;
+  outline: none;
+  background: #ffffff;
+  color: #333333;
+  font-family: inherit;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.form-group input::placeholder {
+  color: #9ca3af;
+}
+
+.form-group input:hover,
+.form-group select:hover {
+  border-color: #d1d1d1;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #f4c430;
+  box-shadow: 0 0 0 3px rgba(244, 196, 48, 0.16);
+}
+
+
+/* =========================================
+   SELECT
+========================================= */
+
+.form-group select {
+  cursor: pointer;
+}
+
+
+/* =========================================
+   ERROR
+========================================= */
+
+.form-error {
+  margin-top: 5px;
+  color: #ffdddd;
+  font-family: inherit;
+  font-size: 11px;
+}
+
+
+/* =========================================
+   FORM ACTIONS
+========================================= */
+
+.add-admin-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+
+/* =========================================
+   CANCEL BUTTON
+========================================= */
+
+.cancel-admin-button {
+  height: 43px;
+  padding: 0 22px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background: transparent;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.cancel-admin-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* =========================================
+   ADD BUTTON
+========================================= */
+
+.save-admin-button {
+  height: 43px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 8px;
+  background: #f4c430;
+  color: #650b20;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.16);
+  transition: 0.2s ease;
+}
+
+.save-admin-button:hover {
+  background: #ffd84d;
+  transform: translateY(-1px);
+}
+
+
+/* =========================================
+   SCROLLBAR
+========================================= */
+
+.add-admin-modal::-webkit-scrollbar {
+  width: 7px;
+}
+
+.add-admin-modal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.add-admin-modal::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 600px) {
+  .add-admin-overlay {
+    padding: 12px;
+    align-items: flex-start;
+  }
+
+  .add-admin-modal {
+    max-width: 100%;
+    max-height: calc(100vh - 24px);
+    border-radius: 14px;
+    overflow-y: auto;
+  }
+
+  .add-admin-header {
+    padding: 20px;
+  }
+
+  .add-admin-form {
+    padding: 20px;
+  }
+
+  .add-admin-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .cancel-admin-button,
+  .save-admin-button {
+    width: 100%;
+  }
+}
