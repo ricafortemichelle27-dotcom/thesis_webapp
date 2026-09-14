@@ -10,18 +10,46 @@ import {
 } from "../models/eventModel.js";
 
 import db from "../config/db.js";
+import {
+    deleteCloudinaryAsset,
+    uploadPdfToCloudinary,
+} from "../utils/cloudinary.js";
 
-const getUploadedFilePath = (file) => {
-    if (!file) {
-        return null;
+const uploadEventFilesToCloudinary = async (files) => {
+    const uploadedAssets = [];
+    const uploadedFiles = {};
+
+    try {
+        const fileEntries = [
+            ["letter_of_approval", "thesis-events/lettersOfApproval"],
+            ["certificate_template", "thesis-events/certificateTemplates"],
+        ];
+
+        for (const [fieldName, folder] of fileEntries) {
+            const file = files?.[fieldName]?.[0];
+
+            if (!file) {
+                continue;
+            }
+
+            const uploadedFile = await uploadPdfToCloudinary(file, folder);
+            uploadedFiles[fieldName] = uploadedFile.url;
+            uploadedAssets.push(uploadedFile.publicId);
+        }
+
+        return { uploadedFiles, uploadedAssets };
+    } catch (error) {
+        await Promise.allSettled(
+            uploadedAssets.map((publicId) => deleteCloudinaryAsset(publicId))
+        );
+        throw error;
     }
+};
 
-    const directory =
-        file.fieldname === "letter_of_approval"
-            ? "lettersOfApproval"
-            : "certificateTemplates";
-
-    return `/uploads/${directory}/${file.filename}`;
+const cleanupUploadedAssets = async (publicIds) => {
+    await Promise.allSettled(
+        publicIds.map((publicId) => deleteCloudinaryAsset(publicId))
+    );
 };
 
 const getRequestingUserId = (req) => {
@@ -157,6 +185,8 @@ const validateEventManagementRequest = async (req, res, existingEvent) => {
 
 // Create Event
 export const createEventAccount = async (req, res) => {
+    let uploadedAssets = [];
+
     try {
         const {
             event_name,
@@ -215,6 +245,13 @@ export const createEventAccount = async (req, res) => {
             });
         }
 
+        if (parsedEligibility.some((rule) => !rule.department)) {
+            return res.status(400).json({
+                message:
+                    "Every eligibility rule must have a department."
+            });
+        }
+
         // Check that the selected user is an Event Admin
         const [adminRows] = await db.query(
             `SELECT id, fullname
@@ -264,6 +301,10 @@ export const createEventAccount = async (req, res) => {
             });
         }
 
+        const uploadedFilesResult = await uploadEventFilesToCloudinary(req.files);
+        uploadedAssets = uploadedFilesResult.uploadedAssets;
+        const uploadedFiles = uploadedFilesResult.uploadedFiles;
+
         // Create event
         const eventId = await createEvent({
             event_name: normalizedEventName,
@@ -271,22 +312,13 @@ export const createEventAccount = async (req, res) => {
             event_date: normalizedDate,
             time_start: normalizedStart,
             time_end: normalizedEnd,
-            letter_of_approval:
-                getUploadedFilePath(letterOfApprovalFile),
-            certificate_template:
-                getUploadedFilePath(certificateTemplateFile),
+            letter_of_approval: uploadedFiles.letter_of_approval,
+            certificate_template: uploadedFiles.certificate_template,
             status: "pending"
         });
 
         // Create eligibility rules
         for (const rule of parsedEligibility) {
-            if (!rule.department) {
-                return res.status(400).json({
-                    message:
-                        "Every eligibility rule must have a department."
-                });
-            }
-
             await createEventEligibility({
                 event_id: eventId,
                 department:
@@ -318,12 +350,13 @@ export const createEventAccount = async (req, res) => {
                 status: "pending",
                 decline_reason: null,
                 eligibility: parsedEligibility,
-                letter_of_approval: getUploadedFilePath(letterOfApprovalFile),
-                certificate_template: getUploadedFilePath(certificateTemplateFile)
+                letter_of_approval: uploadedFiles.letter_of_approval,
+                certificate_template: uploadedFiles.certificate_template
             }
         });
 
     } catch (error) {
+        await cleanupUploadedAssets(uploadedAssets);
         console.error("Create event error:", error);
 
         return res.status(500).json({
@@ -560,6 +593,8 @@ export const declineEvent = async (req, res) => {
 
 
 export const updateEvent = async (req, res) => {
+    let uploadedAssets = [];
+
     try {
         const { id } = req.params;
         const {
@@ -573,13 +608,6 @@ export const updateEvent = async (req, res) => {
             status,
             decline_reason
         } = req.body;
-        const uploadedLetterOfApproval = getUploadedFilePath(
-            req.files?.letter_of_approval?.[0]
-        );
-        const uploadedCertificateTemplate = getUploadedFilePath(
-            req.files?.certificate_template?.[0]
-        );
-
         const existingEvent = await getEventById(id);
 
         if (!existingEvent) {
@@ -598,6 +626,10 @@ export const updateEvent = async (req, res) => {
         }
 
         if (actorContext.role === "system_admin") {
+            const uploadedFilesResult = await uploadEventFilesToCloudinary(req.files);
+            uploadedAssets = uploadedFilesResult.uploadedAssets;
+            const uploadedFiles = uploadedFilesResult.uploadedFiles;
+
             const updatedRows = await updateEventById({
                 id,
                 event_name: event_name || existingEvent.event_name,
@@ -606,12 +638,12 @@ export const updateEvent = async (req, res) => {
                 time_start: time_start || existingEvent.time_start,
                 time_end: time_end || existingEvent.time_end,
                 letter_of_approval:
-                    uploadedLetterOfApproval ||
+                    uploadedFiles.letter_of_approval ||
                     (letter_of_approval !== undefined
                         ? letter_of_approval
                         : existingEvent.letter_of_approval),
                 certificate_template:
-                    uploadedCertificateTemplate ||
+                    uploadedFiles.certificate_template ||
                     (certificate_template !== undefined
                         ? certificate_template
                         : existingEvent.certificate_template),
@@ -624,6 +656,7 @@ export const updateEvent = async (req, res) => {
             });
 
             if (updatedRows === 0) {
+                await cleanupUploadedAssets(uploadedAssets);
                 return res.status(404).json({
                     message: "Event not found."
                 });
@@ -662,6 +695,10 @@ export const updateEvent = async (req, res) => {
             );
         }
 
+        const uploadedFilesResult = await uploadEventFilesToCloudinary(req.files);
+        uploadedAssets = uploadedFilesResult.uploadedAssets;
+        const uploadedFiles = uploadedFilesResult.uploadedFiles;
+
         const updatedRows = await updateEventById({
             id,
             event_name: event_name || existingEvent.event_name,
@@ -670,12 +707,12 @@ export const updateEvent = async (req, res) => {
             time_start: time_start || existingEvent.time_start,
             time_end: time_end || existingEvent.time_end,
             letter_of_approval:
-                uploadedLetterOfApproval ||
+                uploadedFiles.letter_of_approval ||
                 (letter_of_approval !== undefined
                     ? letter_of_approval
                     : existingEvent.letter_of_approval),
             certificate_template:
-                uploadedCertificateTemplate ||
+                uploadedFiles.certificate_template ||
                 (certificate_template !== undefined
                     ? certificate_template
                     : existingEvent.certificate_template),
@@ -684,6 +721,7 @@ export const updateEvent = async (req, res) => {
         });
 
         if (updatedRows === 0) {
+            await cleanupUploadedAssets(uploadedAssets);
             return res.status(404).json({
                 message: "Event not found."
             });
@@ -693,6 +731,7 @@ export const updateEvent = async (req, res) => {
             message: "Event updated successfully. The event has been resubmitted for approval."
         });
     } catch (error) {
+        await cleanupUploadedAssets(uploadedAssets);
         console.error("Update event error:", error);
 
         return res.status(500).json({
