@@ -107,6 +107,11 @@
 	cursor: pointer;
 }
 
+.download-attendance-button svg,
+.file-icon svg {
+	color: #000000;
+}
+
 .download-attendance-button:disabled {
 	background: #c7b9bd;
 	cursor: not-allowed;

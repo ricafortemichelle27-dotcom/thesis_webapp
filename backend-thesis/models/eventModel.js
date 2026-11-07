@@ -7,6 +7,7 @@ export const createEvent = async ({
     event_date,
     time_start,
     time_end,
+    location,
     letter_of_approval,
     certificate_template,
     status
@@ -19,17 +20,19 @@ export const createEvent = async ({
             event_date,
             time_start,
             time_end,
+            location,
             letter_of_approval,
             certificate_template,
             status
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
             event_name,
             event_admin_id,
             event_date,
             time_start,
             time_end,
+            location || null,
             letter_of_approval || null,
             certificate_template || null,
             status || "pending"
@@ -76,9 +79,16 @@ export const getAllEvents = async () => {
             e.event_name,
             e.event_admin_id,
             u.fullname AS event_admin_name,
-            e.event_date,
+            DATE_FORMAT(e.event_date, '%Y-%m-%d') AS event_date,
             e.time_start,
             e.time_end,
+            e.location,
+            e.kiosk_theme_mode,
+            e.event_logo,
+            e.background_display_photo,
+            e.event_description,
+            e.photobooth_start,
+            e.photobooth_end,
             e.letter_of_approval,
             e.certificate_template,
             e.status,
@@ -110,9 +120,16 @@ export const getEventById = async (id) => {
             e.event_name,
             e.event_admin_id,
             u.fullname AS event_admin_name,
-            e.event_date,
+            DATE_FORMAT(e.event_date, '%Y-%m-%d') AS event_date,
             e.time_start,
             e.time_end,
+            e.location,
+            e.kiosk_theme_mode,
+            e.event_logo,
+            e.background_display_photo,
+            e.event_description,
+            e.photobooth_start,
+            e.photobooth_end,
             e.letter_of_approval,
             e.certificate_template,
             e.status,
@@ -150,10 +167,12 @@ export const getEventById = async (id) => {
         [id]
     );
 
-    return {
-        ...eventRows[0],
-        eligibility: eligibilityRows
-    };
+    const [speakers] = await db.query(
+        `SELECT id, speaker_name AS name, speaker_photo AS photo,
+            speaker_description AS description, speaker_order
+         FROM event_speakers WHERE event_id = ? ORDER BY speaker_order, id`, [id]
+    );
+    return { ...eventRows[0], eligibility: eligibilityRows, speakers };
 };
 
 
@@ -183,39 +202,61 @@ export const updateEventById = async ({
     event_date,
     time_start,
     time_end,
+    location,
     letter_of_approval,
     certificate_template,
     status,
-    decline_reason
+    decline_reason,
+    eligibility
 }) => {
-    const [result] = await db.query(
-        `UPDATE events
-        SET
-            event_name = ?,
-            event_admin_id = ?,
-            event_date = ?,
-            time_start = ?,
-            time_end = ?,
-            letter_of_approval = ?,
-            certificate_template = ?,
-            status = ?,
-            decline_reason = ?
-        WHERE id = ?`,
-        [
-            event_name,
-            event_admin_id,
-            event_date,
-            time_start,
-            time_end,
-            letter_of_approval || null,
-            certificate_template || null,
-            status || "pending",
-            decline_reason || null,
-            id
-        ]
-    );
+    const connection = await db.getConnection();
+    try {
+        await connection.beginTransaction();
+        const [result] = await connection.query(
+            `UPDATE events
+            SET
+                event_name = ?,
+                event_admin_id = ?,
+                event_date = ?,
+                time_start = ?,
+                time_end = ?,
+                location = ?,
+                letter_of_approval = ?,
+                certificate_template = ?,
+                status = ?,
+                decline_reason = ?
+            WHERE id = ?`,
+            [
+                event_name,
+                event_admin_id,
+                event_date,
+                time_start,
+                time_end,
+                location || null,
+                letter_of_approval || null,
+                certificate_template || null,
+                status || "pending",
+                decline_reason || null,
+                id
+            ]
+        );
 
-    return result.affectedRows;
+        if (eligibility !== undefined) {
+            await connection.query('DELETE FROM event_eligibility WHERE event_id = ?', [id]);
+            for (const rule of eligibility) {
+                await connection.query(`INSERT INTO event_eligibility
+                    (event_id, department, major_program, year_level) VALUES (?, ?, ?, ?)`,
+                    [id, rule.department, rule.major_program || null, rule.year_level || null]);
+            }
+        }
+        await connection.commit();
+        return result.affectedRows;
+    } catch (error) {
+        await connection.rollback();
+        throw error;
+    } finally {
+        connection.release();
+    }
 };
 
 

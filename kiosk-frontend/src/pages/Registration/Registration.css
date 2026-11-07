@@ -1,0 +1,647 @@
+/* =========================================
+   REGISTRATION PAGE
+   ========================================= */
+
+.registration-page {
+    --registration-primary: #650b20;
+    --registration-secondary: #8c0925;
+    --registration-accent: #f4c430;
+
+    width: 100%;
+    max-width: 620px;
+    height: calc(100vh - 157px);
+    height: calc(100dvh - 157px);
+
+    margin: 0 auto;
+
+    padding: 22px 20px 30px;
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+
+/* =========================================
+   PAGE HEADER
+   ========================================= */
+
+.registration-header {
+    text-align: center;
+
+    flex-shrink: 0;
+
+    margin-bottom: 15px;
+}
+
+.registration-header h1 {
+    margin: 0 0 3px;
+
+    color: var(--registration-primary);
+
+    font-size: 25px;
+    font-weight: 800;
+
+    letter-spacing: 0.4px;
+}
+
+.registration-header p {
+    margin: 0;
+
+    color: #777777;
+
+    font-size: 11px;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================
+   REGISTRATION CARD
+
+   This creates the soft white rounded
+   panel similar to the Canva design.
+   ========================================= */
+
+.registration-card {
+    width: 100%;
+
+    flex: 1;
+    min-height: 0;
+
+    padding: 22px 25px;
+
+    box-sizing: border-box;
+
+    background: rgba(255, 255, 255, 0.94);
+
+    border-radius: 30px;
+
+    box-shadow:
+        0 5px 22px rgba(0, 0, 0, 0.16);
+
+    overflow-y: auto;
+
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        #d4a3ad
+        transparent;
+}
+
+
+/* =========================================
+   CARD SCROLLBAR
+   ========================================= */
+
+.registration-card::-webkit-scrollbar {
+    width: 5px;
+}
+
+.registration-card::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.registration-card::-webkit-scrollbar-thumb {
+    background: #d4a3ad;
+    border-radius: 10px;
+}
+
+
+/* =========================================
+   SECTION TITLES
+
+   These are intentionally subtle so the
+   page resembles the Canva mockup more.
+   ========================================= */
+
+.registration-section-title {
+    margin-top: 2px;
+    margin-bottom: 12px;
+
+    color: var(--registration-primary);
+
+    font-size: 11px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+
+    border-bottom: 1px solid #eeeeee;
+
+    padding-bottom: 6px;
+}
+
+.registration-section-title:not(:first-child) {
+    margin-top: 8px;
+}
+
+
+/* =========================================
+   NAME ROW
+   ========================================= */
+
+.registration-name-row {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+}
+
+
+/* =========================================
+   FORM FIELD
+   ========================================= */
+
+.registration-field {
+    width: 100%;
+
+    margin-bottom: 11px;
+}
+
+
+/* =========================================
+   FIELD LABEL
+   ========================================= */
+
+.registration-field label {
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    margin-bottom: 5px;
+
+    color: #222222;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.15px;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================
+   FORM ICON
+   ========================================= */
+
+.field-icon {
+    width: 16px;
+    height: 16px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    color: var(--registration-secondary);
+}
+
+.field-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+
+/* =========================================
+   OPTIONAL TEXT
+   ========================================= */
+
+.optional-text {
+    margin-left: 3px;
+
+    color: #999999;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    text-transform: none;
+}
+
+
+/* =========================================
+   INPUTS AND SELECTS
+
+   Light gray rounded boxes imitate the
+   Canva mockup.
+   ========================================= */
+
+.registration-field input,
+.registration-field select {
+    width: 100%;
+
+    height: 39px;
+
+    padding: 0 12px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #e1e1e1;
+
+    border-radius: 7px;
+
+    background: #f7f8fa;
+
+    color: #333333;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* =========================================
+   INPUT PLACEHOLDER
+   ========================================= */
+
+.registration-field input::placeholder {
+    color: #aaaaaa;
+}
+
+
+/* =========================================
+   INPUT FOCUS
+   ========================================= */
+
+.registration-field input:focus,
+.registration-field select:focus {
+    border-color: var(--registration-secondary);
+
+    background: #ffffff;
+
+    box-shadow:
+        0 0 0 2px color-mix(in srgb, var(--registration-primary) 8%, transparent);
+}
+
+
+/* =========================================
+   DISABLED PROGRAM/YEAR DROPDOWN
+   ========================================= */
+
+.registration-field select:disabled {
+    background: #eeeeee;
+
+    color: #999999;
+
+    cursor: not-allowed;
+
+    border-color: #dddddd;
+}
+
+
+/* =========================================
+   SELECT ARROW
+   ========================================= */
+
+.registration-field select {
+    cursor: pointer;
+}
+
+
+/* =========================================
+   DATA PRIVACY AREA
+   ========================================= */
+
+.registration-privacy {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 8px;
+
+    margin-top: 6px;
+    margin-bottom: 16px;
+
+    padding-top: 3px;
+}
+
+
+/* =========================================
+   PRIVACY CHECKBOX
+   ========================================= */
+
+.registration-privacy input {
+    width: 15px;
+    height: 15px;
+
+    margin: 2px 0 0;
+
+    flex-shrink: 0;
+
+    accent-color: var(--registration-primary);
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   PRIVACY CONTENT
+   ========================================= */
+
+.privacy-content {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+
+/* =========================================
+   PRIVACY TEXT
+   ========================================= */
+
+.registration-privacy label {
+    color: #666666;
+
+    font-size: 9px;
+
+    line-height: 1.45;
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   PRIVACY NOTICE LINK
+   ========================================= */
+
+.privacy-link {
+    width: fit-content;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: var(--registration-secondary);
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    text-decoration: underline;
+
+    cursor: pointer;
+}
+
+.privacy-link:hover {
+    color: var(--registration-primary);
+}
+
+
+/* =========================================
+   FORM ACTIONS
+   ========================================= */
+
+.registration-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 3px;
+}
+
+
+/* =========================================
+   CANCEL BUTTON
+   ========================================= */
+
+.cancel-button {
+    min-width: 82px;
+
+    height: 38px;
+
+    padding: 0 15px;
+
+    border: 1px solid var(--registration-primary);
+
+    border-radius: 7px;
+
+    background: #ffffff;
+
+    color: var(--registration-primary);
+
+    font-family: inherit;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.cancel-button:hover {
+    background: #f8f1f3;
+}
+
+.cancel-button:active {
+    background: #eee1e5;
+}
+
+
+/* =========================================
+   FINGERPRINT / CONTINUE BUTTON
+   ========================================= */
+
+.register-button {
+    min-width: 170px;
+
+    height: 38px;
+
+    padding: 0 15px;
+
+    border: 1px solid var(--registration-accent);
+
+    border-radius: 7px;
+
+    background: var(--registration-accent);
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 3px 7px rgba(0, 0, 0, 0.12);
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.1s ease,
+        box-shadow 0.2s ease;
+}
+
+.register-button:hover {
+    background: color-mix(in srgb, var(--registration-accent) 88%, black);
+
+    box-shadow:
+        0 4px 9px rgba(0, 0, 0, 0.15);
+}
+
+.register-button:active {
+    transform: scale(0.98);
+}
+
+
+/* =========================================
+   BUTTON ARROW
+   ========================================= */
+
+.button-arrow {
+    margin-left: 5px;
+
+    font-size: 13px;
+
+    font-weight: 900;
+}
+
+
+/* =========================================
+   SMALL KIOSK / MOBILE SCREEN
+   ========================================= */
+
+@media (max-width: 600px) {
+
+    .registration-page {
+        padding: 18px 13px 25px;
+    }
+
+
+    .registration-header {
+        margin-bottom: 12px;
+    }
+
+
+    .registration-header h1 {
+        font-size: 22px;
+    }
+
+
+    .registration-header p {
+        font-size: 10px;
+    }
+
+
+    .registration-card {
+        padding: 19px;
+
+        border-radius: 24px;
+    }
+
+
+    .registration-name-row {
+        grid-template-columns: 1fr;
+
+        gap: 0;
+    }
+
+
+    .registration-field {
+        margin-bottom: 11px;
+    }
+
+
+    .registration-field input,
+    .registration-field select {
+        height: 40px;
+    }
+
+
+    .registration-actions {
+        justify-content: stretch;
+    }
+
+
+    .cancel-button,
+    .register-button {
+        flex: 1;
+
+        min-width: 0;
+    }
+
+}
+
+
+/* =========================================
+   VERY SHORT KIOSK SCREEN
+
+   Prevents the form from becoming too tall
+   on smaller laptop/kiosk displays.
+   ========================================= */
+
+@media (max-height: 700px) {
+
+    .registration-page {
+        padding-top: 12px;
+        padding-bottom: 18px;
+    }
+
+
+    .registration-header {
+        margin-bottom: 8px;
+    }
+
+
+    .registration-header h1 {
+        font-size: 21px;
+    }
+
+
+    .registration-card {
+        padding: 16px 20px;
+    }
+
+
+    .registration-field {
+        margin-bottom: 8px;
+    }
+
+
+    .registration-field input,
+    .registration-field select {
+        height: 35px;
+    }
+
+
+    .registration-section-title {
+        margin-bottom: 8px;
+    }
+
+
+    .registration-privacy {
+        margin-bottom: 10px;
+    }
+}

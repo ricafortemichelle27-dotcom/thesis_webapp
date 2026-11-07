@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import {
 	departmentOptions,
 	getMajors,
@@ -163,7 +165,8 @@ function DownloadAttendance({ report, onClose }) {
 						onClick={downloadReport}
 						disabled={previewRows.length === 0}
 					>
-						Download ↓
+						<FontAwesomeIcon icon={faDownload} />
+						Download
 					</button>
 				</div>
 

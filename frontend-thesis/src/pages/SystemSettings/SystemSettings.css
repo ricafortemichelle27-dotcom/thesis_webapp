@@ -881,3 +881,14 @@
     width: 30px;
   }
 }
+
+.shield svg,
+.tips-title svg {
+  color: #000000;
+}
+
+.password-requirements svg,
+.settings-message svg,
+.card-icon svg {
+  color: #000000;
+}

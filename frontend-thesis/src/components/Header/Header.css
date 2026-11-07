@@ -1,3 +1,7 @@
+/* =========================================
+   HEADER
+========================================= */
+
 .header {
     position: fixed;
     top: 0;
@@ -5,13 +9,53 @@
     right: 0;
     height: 70px;
     box-sizing: border-box;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     padding: 0 24px;
+
+    /* Header background */
     background-color: #686662;
+
     border-bottom: 1px solid var(--color-border);
-    z-index: 1000;
+
+    /* Header stays below the sidebar */
+    z-index: 900;
+
+    /*
+         Allows the gray background extension
+       to show underneath the rounded sidebar.
+    */
+    overflow: visible;
+}
+
+/* =========================================
+   HEADER BACKGROUND EXTENSION
+========================================= */
+
+/*
+   The sidebar is 300px wide and has a
+   20px rounded corner.
+
+   This extends the gray header slightly
+   to the left so the white background
+   cannot appear through the rounded corner.
+*/
+.header::before {
+    content: "";
+    position: absolute;
+
+    top: 0;
+    left: -25px;
+
+    width: calc(100% + 25px);
+    height: 70px;
+
+    background-color: #686662;
+
+    z-index: -1;
 }
 
 .header-menu,
@@ -32,6 +76,17 @@
 .open-menu,
 .notification-btn,
 .profile-btn,
+.profile-admin-name {
+    max-width: 240px;
+    margin: 2px;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-primary-dark);
+    font-size: 14px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
 .settings-btn {
     border: 1px solid var(--color-border);
     border-radius: 10px;
@@ -77,7 +132,7 @@
 }
 
 .header-search svg {
-    color: #777;
+    color: #000000;
     font-size: 14px;
     flex-shrink: 0;
 }
@@ -103,18 +158,16 @@
     position: absolute;
     top: calc(100% + 8px);
     right: 0;
-
     display: flex;
     flex-direction: column;
-
     min-width: 140px;
-
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 8px;
-
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    /* Keep dropdown above the header */
     z-index: 1100;
 }
 
@@ -125,6 +178,15 @@
     padding: 8px 10px;
     text-align: left;
     background: transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.profile-btn svg,
+.notification-btn svg,
+.settings-btn svg {
+    color: #000000;
 }
 
 .settings-btn:hover,

@@ -1,5 +1,7 @@
 import express from "express";
 import uploadEventFiles from "../middleware/eventUpload.js";
+import uploadEventConfiguration from "../middleware/eventConfigurationUpload.js";
+import { saveEventConfiguration } from "../controllers/eventConfigurationController.js";
 
 import {
     createEventAccount,
@@ -13,6 +15,7 @@ import {
 } from "../controllers/eventController.js";
 
 const router = express.Router();
+router.put('/:id/configuration', uploadEventConfiguration, saveEventConfiguration);
 
 
 // Create Event

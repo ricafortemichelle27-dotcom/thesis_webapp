@@ -150,7 +150,7 @@
 
     background: #f6e5e9;
 
-    color: #76152f;
+    color: #000000;
 
     font-size: 18px;
 }
@@ -394,7 +394,7 @@
 
     background: #fbe9ed;
 
-    color: #a11d3b;
+    color: #000000;
 
     font-size: 16px;
 }
@@ -456,7 +456,7 @@
 
     background: #f6e5e9;
 
-    color: #76152f;
+    color: #000000;
 
     font-size: 12px;
 }
@@ -520,7 +520,7 @@
 
     background: #ffffff;
 
-    color: #76152f;
+    color: #000000;
 }
 
 .certificate-view-btn:hover {

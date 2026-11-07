@@ -1,0 +1,140 @@
+/* =========================================
+   KIOSK FOOTER
+   ========================================= */
+
+.kiosk-footer {
+
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 0;
+
+    z-index: 10;
+
+    width: 100%;
+
+    height: 74px;
+
+    max-width: min(100vw, calc(100vh * 11.8 / 19.3));
+
+    transform: translateX(-50%);
+
+    display: flex;
+
+    justify-content: space-evenly;
+
+    align-items: center;
+
+    background-color: #bc211b;
+
+    border-radius: 34px 34px 0 0;
+
+}
+
+
+/* =========================================
+   FOOTER BUTTONS
+   ========================================= */
+
+.kiosk-footer button {
+
+    width: 52px;
+
+    height: 52px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    border: none;
+
+    background: transparent;
+
+    color: #f4c430;
+
+    cursor: pointer;
+
+    border-radius: 50%;
+
+    transition:
+
+        color 0.2s ease,
+
+        background-color 0.2s ease,
+
+        transform 0.2s ease;
+
+}
+
+.kiosk-footer-icon {
+
+    width: 52px;
+
+    height: 52px;
+
+    display: block;
+
+    color: currentColor;
+
+    fill: currentColor;
+
+    overflow: visible;
+
+}
+
+
+/* =========================================
+   HOVER EFFECT
+   ========================================= */
+
+.kiosk-footer button:hover {
+
+    color: #ffffff;
+
+    background-color: #f4c430;
+
+    transform: scale(0.82);
+
+}
+
+
+/* =========================================
+   ACTIVE / SELECTED BUTTON
+   ========================================= */
+
+.kiosk-footer button.active {
+
+    color: #f4c430;
+
+    background-color: transparent;
+
+}
+
+
+/* =========================================
+   CLICK / PRESS EFFECT
+   ========================================= */
+
+.kiosk-footer button:active {
+
+    color: #ffffff;
+
+    transform: scale(0.90);
+
+}
+
+
+/* =========================================
+   KEYBOARD ACCESSIBILITY
+   ========================================= */
+
+.kiosk-footer button:focus-visible {
+
+    outline: 2px solid #f4c430;
+
+    outline-offset: 4px;
+
+}

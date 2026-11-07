@@ -1,4 +1,12 @@
+import Notification from '../../components/Notification/Notification.jsx';
 import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCircleCheck,
+  faCircleExclamation,
+  faClock,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 import "./Users.css";
 import AddAdmin from "../../components/Modal/AddAdmin/AddAdmin";
 import { apiUrl } from "../../utils/api.js";
@@ -25,6 +33,7 @@ function Users() {
   // =========================================
   // STUDENT DATA
   // =========================================
+  const [successMessage, setSuccessMessage] = useState('');
   const [showAddAdmin, setShowAddAdmin] = useState(false);
   const [students, setStudents] = useState([
     {
@@ -34,6 +43,7 @@ function Users() {
       middleName: "Santos",
       suffix: "",
       studentId: "2026-00123",
+      email: "juan.delacruz@wis.edu.ph",
       department: "CITCS",
       major: "BS Information Technology",
       yearLevel: "4th Year",
@@ -46,6 +56,7 @@ function Users() {
       middleName: "Reyes",
       suffix: "",
       studentId: "2026-00124",
+      email: "maria.santos@wis.edu.ph",
       department: "CITCS",
       major: "BS Computer Science",
       yearLevel: "3rd Year",
@@ -58,6 +69,7 @@ function Users() {
       middleName: "Garcia",
       suffix: "",
       studentId: "2026-00125",
+      email: "pedro.reyes@wis.edu.ph",
       department: "CITCS",
       major: "BS Computer Science",
       yearLevel: "2nd Year",
@@ -70,6 +82,7 @@ function Users() {
       middleName: "Lopez",
       suffix: "",
       studentId: "2026-00126",
+      email: "ana.garcia@wis.edu.ph",
       department: "SEBA",
       major: "BS Business Administration",
       yearLevel: "1st Year",
@@ -141,6 +154,7 @@ function Users() {
       student.middleName.toLowerCase().includes(search) ||
       (student.suffix || "").toLowerCase().includes(search) ||
       student.studentId.toLowerCase().includes(search) ||
+      (student.email || "").toLowerCase().includes(search) ||
       student.department.toLowerCase().includes(search) ||
       student.major.toLowerCase().includes(search);
 
@@ -277,7 +291,7 @@ function Users() {
 
       setShowAddAdmin(false);
       setEventAdmins((currentAdmins) => [data.eventAdmin, ...currentAdmins]);
-      alert(data.message);
+      setSuccessMessage('Event Admin added Successfully');
     } catch (error) {
       alert(error.message || "Unable to create Event Admin.");
     }
@@ -370,7 +384,7 @@ function Users() {
 
             <div className="user-summary-card">
               <div className="summary-card-icon">
-                👥
+                <FontAwesomeIcon icon={faUsers} />
               </div>
 
               <div>
@@ -385,7 +399,7 @@ function Users() {
 
             <div className="user-summary-card">
               <div className="summary-card-icon pending">
-                ⏳
+                <FontAwesomeIcon icon={faClock} />
               </div>
 
               <div>
@@ -405,7 +419,7 @@ function Users() {
 
             <div className="user-summary-card">
               <div className="summary-card-icon approved">
-                ✓
+                <FontAwesomeIcon icon={faCircleCheck} />
               </div>
 
               <div>
@@ -425,7 +439,7 @@ function Users() {
 
             <div className="user-summary-card">
               <div className="summary-card-icon rejected">
-                !
+                <FontAwesomeIcon icon={faCircleExclamation} />
               </div>
 
               <div>
@@ -569,6 +583,7 @@ function Users() {
                     <th>Middle Name</th>
                     <th>Suffix</th>
                     <th>Student ID</th>
+                    <th>Email Address</th>
                     <th>Department</th>
                     <th>Major / Program</th>
                     <th>Year Level</th>
@@ -608,6 +623,10 @@ function Users() {
                           <span className="student-id">
                             {student.studentId}
                           </span>
+                        </td>
+
+                        <td>
+                          {student.email || "—"}
                         </td>
 
                         <td>
@@ -652,7 +671,7 @@ function Users() {
                                     )
                                   }
                                 >
-                                  ✓
+                                  <FontAwesomeIcon icon={faCircleCheck} />
                                 </button>
 
                                 <button
@@ -1024,6 +1043,8 @@ function Users() {
 
         </div>
       )}
+
+      <Notification message={successMessage} onDismiss={() => setSuccessMessage('')} />
 
       {showAddAdmin && (
         <AddAdmin 

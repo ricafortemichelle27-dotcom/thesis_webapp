@@ -1,0 +1,33 @@
+.success-notification {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: calc(100vw - 48px);
+    box-sizing: border-box;
+    padding: 14px 18px;
+    border: 1px solid #eadfe1;
+    border-left: 5px solid #f4c430;
+    border-radius: 12px;
+    background: #fff;
+    color: #7a0019;
+    box-shadow: 0 8px 28px #65001426;
+    font: 500 14px/1.5 'Poppins', 'Segoe UI', sans-serif;
+}
+
+.success-notification button {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: inherit;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.success-notification button:hover { background: #f7e7eb; }

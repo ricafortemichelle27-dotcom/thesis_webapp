@@ -1,0 +1,9 @@
+.menu-wrapper { position: relative; }
+.kiosk-header { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; min-height: 74px; padding: 10px 16px 11px; color: #fff; background: #bc211b; border-radius: 0 0 34px 34px; }
+.school-brand { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.school-crest { width: 40px; height: 40px; flex-shrink: 0; object-fit: contain; border: 2px solid #fff; border-radius: 50%; background: #fff5cf; }
+.school-brand strong, .school-brand span { display: block; white-space: nowrap; }
+.school-brand strong { color: #f3c91f; font-size: 14px; line-height: 1.05; }
+.school-brand span { margin-top: 2px; font-size: 10px; font-weight: 700; }
+.menu-button { display: grid; gap: 4px; width: 34px; padding: 5px; border: 0; background: transparent; cursor: pointer; }
+.menu-button span { display: block; height: 2px; border-radius: 2px; background: #fff; }

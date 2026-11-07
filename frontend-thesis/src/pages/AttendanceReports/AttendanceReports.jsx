@@ -1,5 +1,14 @@
 import { useState } from "react";
 import "./AttendanceReports.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowRight,
+  faCalendarDays,
+  faChartColumn,
+  faDownload,
+  faUserCheck,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { getCurrentUser } from "../../utils/cookiesUtils.js";
 import DownloadAttendance from "../../components/Modal/DownloadAttendance/DownloadAttendance.jsx";
@@ -185,7 +194,7 @@ function Attendance() {
         <div className="summary-card">
 
           <div className="summary-icon events-icon">
-            <span>▦</span>
+            <FontAwesomeIcon icon={faCalendarDays} />
           </div>
 
           <div className="summary-content">
@@ -210,7 +219,7 @@ function Attendance() {
         <div className="summary-card">
 
           <div className="summary-icon attendees-icon">
-            <span>♙</span>
+            <FontAwesomeIcon icon={faUsers} />
           </div>
 
           <div className="summary-content">
@@ -235,7 +244,7 @@ function Attendance() {
         <div className="summary-card">
 
           <div className="summary-icon present-icon">
-            <span>✓</span>
+            <FontAwesomeIcon icon={faUserCheck} />
           </div>
 
           <div className="summary-content">
@@ -258,7 +267,7 @@ function Attendance() {
         <div className="summary-card">
 
           <div className="summary-icon rate-icon">
-            <span>%</span>
+            <FontAwesomeIcon icon={faChartColumn} />
           </div>
 
           <div className="summary-content">
@@ -491,7 +500,7 @@ function Attendance() {
                         <div className="file-cell">
 
                           <div className="file-icon">
-                            <span>→</span>
+                            <FontAwesomeIcon icon={faDownload} />
                           </div>
 
 
@@ -513,7 +522,7 @@ function Attendance() {
                             onClick={() => openPreview(record)}
                             title="Preview and download attendance"
                           >
-                            Click here to Download Attendance <span>→</span>
+                            Click here to Download Attendance <FontAwesomeIcon icon={faArrowRight} />
                           </button>
 
                         </div>
@@ -666,7 +675,7 @@ function Attendance() {
                   <div className="mobile-file">
 
                     <div className="file-icon">
-                      <span>→</span>
+                      <FontAwesomeIcon icon={faDownload} />
                     </div>
 
 
@@ -688,7 +697,7 @@ function Attendance() {
                       onClick={() => openPreview(record)}
                       title="Preview and download attendance"
                     >
-                      Click here to Download Attendance →
+                      Click here to Download Attendance <FontAwesomeIcon icon={faArrowRight} />
                     </button>
 
                   </div>

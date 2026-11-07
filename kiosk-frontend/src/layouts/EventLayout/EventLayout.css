@@ -1,0 +1,167 @@
+
+/* =========================================
+   EVENT LAYOUT
+
+   Temporary Event Theme:
+   Deep Navy + Gold/Orange
+
+   The background image can later be
+   replaced by the Event Admin's selected
+   event background.
+========================================= */
+
+.event-layout {
+    --event-footer-height: 74px;
+    --event-footer-visible-height: 0px;
+    --event-primary: #14213d;
+    --event-secondary: #8c0925;
+    --event-accent: #fca311;
+    --event-background: #fff8ed;
+    --event-text: #14213d;
+    --event-overlay: rgba(255, 248, 237, 0.72);
+
+    width: min(100vw, calc(100vh * 11.8 / 19.3));
+    height: min(100vh, calc(100vw * 19.3 / 11.8));
+    min-height: 0;
+    aspect-ratio: 11.8 / 19.3;
+    margin: 0 auto;
+
+    position: relative;
+
+    overflow: hidden;
+
+    background-color: var(--event-background);
+}
+
+
+/* =========================================
+   MAIN EVENT CONTENT
+========================================= */
+
+.event-layout-wis {
+    --event-background: #dce2e5;
+    --event-overlay: transparent;
+    background: #dce2e5 url('../../assets/images/school_img.png') center / cover no-repeat;
+}
+
+.event-layout-wis .event-main-content::before {
+    background-image: none;
+}
+
+.event-main-content {
+    height: 100%;
+    min-height: 0;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    /*
+       Header = 75px
+       Footer = 90px
+
+       This prevents the content from
+       being hidden behind them.
+    */
+
+    padding-top: 75px;
+    padding-bottom: 90px;
+
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow-y: auto;
+}
+
+.event-layout-photobooth .event-main-content {
+    overflow: hidden;
+}
+
+
+/* =========================================
+   EVENT BACKGROUND IMAGE
+
+   The image is placed behind the
+   event content.
+========================================= */
+
+.event-main-content::before,
+.event-main-content::after {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    pointer-events: none;
+
+    z-index: 0;
+}
+
+.event-main-content::before {
+    background-image: var(--event-background-image);
+
+    background-size: cover;
+
+    background-position: center;
+
+    background-repeat: no-repeat;
+
+}
+
+.event-main-content::after {
+    background: var(--event-overlay);
+}
+
+
+/* =========================================
+   CONTENT ABOVE BACKGROUND
+========================================= */
+
+.event-main-content > * {
+    position: relative;
+
+    z-index: 1;
+}
+
+.event-layout:has(> .event-footer:not(.retracted)) {
+    --event-footer-visible-height: var(--event-footer-height);
+}
+
+.event-data-state { width: 100%; padding: 24px; color: var(--event-text); }
+.event-data-state button { display: block; width: 100%; padding: 16px; margin-top: 12px; border: 1px solid var(--event-primary); border-radius: 10px; background: #fff; color: var(--event-primary); cursor: pointer; }
+.event-data-state button span { display: block; margin-top: 8px; }
+.event-main-content > .event-asset-error { position: absolute; top: 76px; left: 16px; right: 16px; z-index: 2; padding: 8px; background: #fff; color: #8c0925; border: 1px solid currentColor; border-radius: 6px; font-size: 13px; }
+
+
+/* =========================================
+   RESPONSIVE LAYOUT
+========================================= */
+
+@media (max-width: 800px) {
+
+    .event-main-content {
+        padding-top: 70px;
+        padding-bottom: 80px;
+    }
+}
+
+
+/* =========================================
+   TOUCHSCREEN OPTIMIZATION
+========================================= */
+
+@media (min-width: 1000px) {
+
+    .event-main-content {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+}
+

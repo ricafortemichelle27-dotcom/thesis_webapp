@@ -20,6 +20,13 @@ export const setCookie = (name, value, days) => {
 };
 
 export const getCookie = (name) => {
+        // Login stores the response here. A cookie from another localhost
+        // app can contain an older user because cookies are shared across ports.
+        if (name === "user") {
+            const savedUser = localStorage.getItem(name);
+            if (savedUser) return savedUser;
+        }
+
         const cookies = document.cookie.split(";");
 
         for (const cookie of cookies) {

@@ -1,3 +1,38 @@
 node_modules/
 .env
 backend-thesis/uploads/
+# Device databases and protected key material must never enter Git or deployment assets.
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.dpapi
+mysql.env
+kiosk-local/native/zk9500/bin/
+
+# Environment files may contain credentials; keep only the safe templates.
+.env.*
+!.env.example
+/package-lock.json
+
+# Generated output and logs
+dist/
+build/
+coverage/
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Local temporary and editor files
+*.tmp
+*.temp
+*.swp
+*~
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.suo
+*.user

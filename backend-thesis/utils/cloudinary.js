@@ -47,7 +47,7 @@ export const uploadPdfToCloudinary = (file, folder) => {
     });
 };
 
-export const deleteCloudinaryAsset = async (publicId) => {
+export const deleteCloudinaryAsset = async (publicId, resourceType = "raw") => {
     if (!publicId) {
         return;
     }
@@ -55,7 +55,21 @@ export const deleteCloudinaryAsset = async (publicId) => {
     configureCloudinary();
 
     await cloudinary.uploader.destroy(publicId, {
-        resource_type: "raw",
+        resource_type: resourceType,
         invalidate: true,
+    });
+};
+
+export const uploadImageToCloudinary = (file, folder) => {
+    configureCloudinary();
+    return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+            { folder, resource_type: 'image', allowed_formats: ['jpg', 'jpeg', 'png', 'webp'] },
+            (error, result) => {
+                if (error) return reject(error);
+                resolve({ url: result.secure_url, publicId: result.public_id });
+            }
+        );
+        stream.end(file.buffer);
     });
 };

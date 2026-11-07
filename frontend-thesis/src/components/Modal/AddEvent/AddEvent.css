@@ -82,7 +82,7 @@
     border-radius: 12px;
 
     background: #f4c430;
-    color: #650b20;
+    color: #000000;
 
     font-size: 20px;
 }
@@ -245,6 +245,10 @@
     gap: 16px;
 }
 
+.event-location-group {
+    margin-top: 16px;
+}
+
 .input-with-icon {
     position: relative;
 }
@@ -306,7 +310,7 @@
 }
 
 .time-input-wrapper svg {
-    color: #650b20;
+    color: #000000;
     flex-shrink: 0;
     width: 16px;
 }
@@ -391,7 +395,7 @@
     border-radius: 9px;
 
     background: #ffffff;
-    color: #650b20;
+    color: #000000;
 
     font-size: 18px;
 }
@@ -427,7 +431,7 @@
 
     flex-shrink: 0;
 
-    color: #f4c430;
+    color: #000000;
 
     font-size: 17px;
 }
@@ -884,7 +888,7 @@
 
     transform: translateY(-50%);
 
-    color: #650b20;
+    color: #000000;
 
     pointer-events: none;
 
@@ -968,7 +972,7 @@
     border-radius: 9px;
 
     background: #ffffff;
-    color: #650b20;
+    color: #000000;
 
     font-size: 18px;
 }
@@ -1004,7 +1008,7 @@
 
     flex-shrink: 0;
 
-    color: #f4c430;
+    color: #000000;
 
     font-size: 17px;
 }
@@ -1260,12 +1264,14 @@
 }
 
 .checkbox-option-row input {
-    width: 2px;
-    height: 2px;
+    width: 18px;
+    height: 18px;
     flex-shrink: 0;
 
     accent-color: #111111;
     margin-left: auto;
+
+    cursor: pointer;
 }
 
 .year-level-field {
@@ -1410,3 +1416,56 @@
 .delete-entry-btn:hover {
     filter: brightness(1.05);
 }
+
+.add-event-modal .event-native-time-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 240px));
+    gap: 18px;
+    margin-top: 8px;
+}
+
+.add-event-modal .event-native-time-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.add-event-modal .event-native-time-grid .event-time-input-label {
+    display: block;
+    position: static;
+    margin: 0;
+    height: auto;
+    line-height: 1.5;
+    color: #5d484e;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.add-event-modal .event-time-group > label {
+    color: #5d484e;
+}
+
+.add-event-modal .event-native-time-grid input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 13px;
+    border: 1px solid #d8ceca;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #302528;
+    font: inherit;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.add-event-modal .event-native-time-grid input:hover {
+    border-color: #c6b8b2;
+}
+
+.add-event-modal .event-native-time-grid input:focus {
+    border-color: #650b20;
+    box-shadow: 0 0 0 3px rgba(101, 11, 32, 0.08);
+}
+
+
+@media (max-width: 600px) { .add-event-modal .event-native-time-grid { grid-template-columns: 1fr; } }

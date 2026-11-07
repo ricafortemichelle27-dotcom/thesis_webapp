@@ -194,6 +194,7 @@ export const createEventAccount = async (req, res) => {
             event_date,
             time_start,
             time_end,
+            location,
             eligibility
         } = req.body;
 
@@ -226,6 +227,7 @@ export const createEventAccount = async (req, res) => {
             !event_date ||
             !time_start ||
             !time_end ||
+            !location ||
             !letterOfApprovalFile ||
             !certificateTemplateFile
         ) {
@@ -289,11 +291,17 @@ export const createEventAccount = async (req, res) => {
                 ? time_end.trim()
                 : "";
 
+        const normalizedLocation =
+            typeof location === "string"
+                ? location.trim()
+                : "";
+
         if (
             !normalizedEventName ||
             !normalizedDate ||
             !normalizedStart ||
-            !normalizedEnd
+            !normalizedEnd ||
+            !normalizedLocation
         ) {
             return res.status(400).json({
                 message:
@@ -312,6 +320,7 @@ export const createEventAccount = async (req, res) => {
             event_date: normalizedDate,
             time_start: normalizedStart,
             time_end: normalizedEnd,
+            location: normalizedLocation,
             letter_of_approval: uploadedFiles.letter_of_approval,
             certificate_template: uploadedFiles.certificate_template,
             status: "pending"
@@ -347,6 +356,7 @@ export const createEventAccount = async (req, res) => {
                 event_date: normalizedDate,
                 time_start: normalizedStart,
                 time_end: normalizedEnd,
+                location: normalizedLocation,
                 status: "pending",
                 decline_reason: null,
                 eligibility: parsedEligibility,
@@ -479,6 +489,7 @@ export const approveEvent = async (req, res) => {
             event_date: existingEvent.event_date,
             time_start: existingEvent.time_start,
             time_end: existingEvent.time_end,
+            location: existingEvent.location,
             letter_of_approval: existingEvent.letter_of_approval,
             certificate_template: existingEvent.certificate_template,
             status: "approved",
@@ -562,6 +573,7 @@ export const declineEvent = async (req, res) => {
             event_date: existingEvent.event_date,
             time_start: existingEvent.time_start,
             time_end: existingEvent.time_end,
+            location: existingEvent.location,
             letter_of_approval: existingEvent.letter_of_approval,
             certificate_template: existingEvent.certificate_template,
             status: "declined",
@@ -603,6 +615,7 @@ export const updateEvent = async (req, res) => {
             event_date,
             time_start,
             time_end,
+            location,
             letter_of_approval,
             certificate_template,
             status,
@@ -614,6 +627,23 @@ export const updateEvent = async (req, res) => {
             return res.status(404).json({
                 message: "Event not found."
             });
+        }
+
+        let eligibility;
+        if (req.body.eligibility !== undefined) {
+            try {
+                eligibility = typeof req.body.eligibility === 'string'
+                    ? JSON.parse(req.body.eligibility) : req.body.eligibility;
+            } catch {
+                return res.status(400).json({ message: 'Eligibility must be valid JSON.' });
+            }
+            if (!Array.isArray(eligibility) || !eligibility.length || eligibility.some((rule) =>
+                !rule || typeof rule.department !== 'string' || !rule.department.trim() || rule.department.length > 100 ||
+                (rule.major_program != null && (typeof rule.major_program !== 'string' || rule.major_program.length > 150)) ||
+                (rule.year_level != null && (typeof rule.year_level !== 'string' || rule.year_level.length > 50)))) {
+                return res.status(400).json({ message: 'Provide valid event eligibility rules.' });
+            }
+            eligibility = eligibility.map((rule) => ({ ...rule, department: rule.department.trim() }));
         }
 
         const actorContext = await getActorContext(req);
@@ -631,12 +661,16 @@ export const updateEvent = async (req, res) => {
             const uploadedFiles = uploadedFilesResult.uploadedFiles;
 
             const updatedRows = await updateEventById({
+                eligibility,
                 id,
                 event_name: event_name || existingEvent.event_name,
                 event_admin_id: event_admin_id || existingEvent.event_admin_id,
                 event_date: event_date || existingEvent.event_date,
                 time_start: time_start || existingEvent.time_start,
                 time_end: time_end || existingEvent.time_end,
+                location: location !== undefined
+                    ? location
+                    : existingEvent.location,
                 letter_of_approval:
                     uploadedFiles.letter_of_approval ||
                     (letter_of_approval !== undefined
@@ -700,12 +734,16 @@ export const updateEvent = async (req, res) => {
         const uploadedFiles = uploadedFilesResult.uploadedFiles;
 
         const updatedRows = await updateEventById({
+            eligibility,
             id,
             event_name: event_name || existingEvent.event_name,
             event_admin_id: existingEvent.event_admin_id,
             event_date: event_date || existingEvent.event_date,
             time_start: time_start || existingEvent.time_start,
             time_end: time_end || existingEvent.time_end,
+            location: location !== undefined
+                ? location
+                : existingEvent.location,
             letter_of_approval:
                 uploadedFiles.letter_of_approval ||
                 (letter_of_approval !== undefined

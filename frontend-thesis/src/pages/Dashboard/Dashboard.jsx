@@ -1,828 +1,464 @@
-import "./Dashboard.css";
-
-import { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-import { getCurrentUser } from "../../utils/cookiesUtils.js";
-
 import {
-    faCalendarAlt,
-    faUsers,
-    faCheckCircle,
-    faUserGraduate,
-    faPlus,
-    faCertificate,
-    faChartBar,
-    faCog,
-    faClipboardList,
-    faArrowRight,
-    faChartColumn,
-    faUserCheck,
+  faCalendarDays, faUsers, faUserCheck, faUserShield,
+  faClock, faLocationDot, faCircleCheck, faArrowRight,
+  faPlus, faUserPlus, faCertificate, faFileCircleCheck,
+  faUserClock, faBell
 } from "@fortawesome/free-solid-svg-icons";
 
-import AddEvent from "../../components/Modal/AddEvent/AddEvent.jsx";
+import "./Dashboard.css";
+import { getCurrentUser } from "../../utils/cookiesUtils.js";
+import { apiUrl } from "../../utils/api.js";
 
+const Dashboard = () => {
+  const navigate = useNavigate();
+  const currentUser = getCurrentUser();
+  const [events, setEvents] = useState([]);
+  const [eventsError, setEventsError] = useState("");
 
-/* =========================================================
-   SAMPLE DATA
-   Replace this later with data from your backend/database.
-   ========================================================= */
+  const isSystemAdmin =
+    currentUser?.role === "system_admin" || currentUser?.role === "System Admin";
+  const isEventAdmin =
+    currentUser?.role === "event_admin" || currentUser?.role === "Event Admin";
 
-const summary = [
-    {
-        id: 1,
-        title: "Total Events",
-        value: 12,
-        status: "2 new this month",
-        icon: faCalendarAlt,
-        color: "#ffd6d6",
-    },
-    {
-        id: 2,
-        title: "Total Registrations",
-        value: "1,248",
-        status: "18% increase from last month",
-        icon: faUsers,
-        color: "#f5dede",
-        systemAdminOnly: true,
-    },
-    {
-        id: 3,
-        title: "Total Attendees",
-        value: "1,102",
-        status: "15% increase from last month",
-        icon: faCheckCircle,
-        color: "#fff4dc",
-    },
-    {
-        id: 4,
-        title: "Active Event Admins",
-        value: 8,
-        status: "1 new admin this month",
-        icon: faUserGraduate,
-        color: "#f0e7ff",
-        systemAdminOnly: true,
-    },
-];
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        setEventsError("");
+        const response = await fetch(apiUrl("/api/events"));
+        const data = await response.json();
 
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to load events.");
+        }
 
-/*
-    expected = number of people expected/eligible to attend
-    attendees = number who actually attended
+        const backendEvents = Array.isArray(data.events) ? data.events : [];
 
-    Later, these values should come from the database.
-*/
+        setEvents(backendEvents.map((event) => ({
+          id: event.id,
+          eventAdminId: event.event_admin_id,
+          eventName: event.event_name || "Untitled Event",
+          date: String(event.event_date || "").slice(0, 10),
+          timeStart: event.time_start || "",
+          timeEnd: event.time_end || "",
+          time: [event.time_start, event.time_end].filter(Boolean).join(" - "),
+          location: event.location || event.venue || "Location not set",
+          status: event.status || event.event_status || "pending",
+          eventAdmin: event.event_admin_name || "Unknown Admin",
+          registrations: Number(event.registrations || 0),
+          expectedAttendees: Number(event.expected_attendees || 0),
+          attendees: Number(event.attendees || 0),
+          certificates: Number(event.certificates || 0),
+        })));
+      } catch (error) {
+        setEvents([]);
+        setEventsError(error.message || "Unable to load events right now.");
+      }
+    };
 
-const events = [
-    {
-        id: 1,
-        name: "WIS Foundation Day",
-        status: "Active",
-        date: "December 10, 2026",
-        registrations: 250,
-        expectedAttendees: 300,
-        attendees: 248,
-        eventAdmin: "Maria Santos",
-    },
-    {
-        id: 2,
-        name: "Inter-School Debate",
-        status: "Active",
-        date: "December 15, 2026",
-        registrations: 180,
-        expectedAttendees: 220,
-        attendees: 165,
-        eventAdmin: "Maria Santos",
-    },
-    {
-        id: 3,
-        name: "Sportsfest 2026",
-        status: "Upcoming",
-        date: "January 10, 2027",
-        registrations: 320,
-        expectedAttendees: 400,
-        attendees: 0,
-        eventAdmin: "John Dela Cruz",
-    },
-    {
-        id: 4,
-        name: "Career Development Seminar",
-        status: "Active",
-        date: "November 25, 2026",
-        registrations: 210,
-        expectedAttendees: 250,
-        attendees: 198,
-        eventAdmin: "John Dela Cruz",
-    },
-    {
-        id: 5,
-        name: "Technology and Innovation Expo",
-        status: "Active",
-        date: "November 30, 2026",
-        registrations: 280,
-        expectedAttendees: 350,
-        attendees: 267,
-        eventAdmin: "Maria Santos",
-    },
-];
+    loadEvents();
+  }, []);
 
+  const recentActivities = [
+    { id: 1, type: "attendance", title: "Student checked in", description: "A student was recorded through biometric attendance.", time: "5 minutes ago" },
+    { id: 2, type: "certificate", title: "Certificate generated", description: "A certificate was generated for an attendee.", time: "18 minutes ago" },
+    { id: 3, type: "approval", title: "Event approved", description: "WIS Foundation Day was approved.", time: "1 hour ago" },
+    { id: 4, type: "event", title: "New event created", description: "A new event was added to the system.", time: "2 hours ago" },
+  ];
 
-const activities = [
-    {
-        id: 1,
-        text: "New event created: WIS Foundation Day",
-        time: "2 hours ago",
-    },
-    {
-        id: 2,
-        text: "Attendance recorded for Inter-School Debate",
-        time: "5 hours ago",
-    },
-    {
-        id: 3,
-        text: "Certificate template updated",
-        time: "Yesterday",
-    },
-    {
-        id: 4,
-        text: "Monthly attendance report generated",
-        time: "Yesterday",
-    },
-    {
-        id: 5,
-        text: "New Event Admin account created",
-        time: "2 days ago",
-    },
-];
+  const pendingActions = isSystemAdmin
+    ? [
+        { id: 1, type: "approval", title: "Event approval required", description: "An event is waiting for your approval.", icon: faClock },
+        { id: 2, type: "registration", title: "Registration review", description: "Review newly submitted registrations.", icon: faUserClock },
+      ]
+    : [
+        { id: 1, type: "event", title: "Event information", description: "Review your pending or declined events.", icon: faCalendarDays },
+        { id: 2, type: "certificate", title: "Certificate templates", description: "Check certificate templates for assigned events.", icon: faCertificate },
+      ];
 
+  const visibleEvents = useMemo(() => {
+    if (!isEventAdmin) return events;
 
-/* =========================================================
-   DASHBOARD COMPONENT
-   ========================================================= */
+    return events.filter(
+      (event) => Number(event.eventAdminId) === Number(currentUser?.id)
+    );
+  }, [currentUser, events, isEventAdmin]);
 
-function Dashboard() {
+  const today = new Date();
 
-    const navigate = useNavigate();
+  const formatDate = (dateString) => {
+    if (!dateString) return "—";
+    return new Date(`${dateString}T00:00:00`).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
 
-    const user = getCurrentUser();
+  const getEventDate = (event) => new Date(`${event.date}T00:00:00`);
+  const getEventStart = (event) => new Date(`${event.date}T${event.timeStart || "00:00:00"}`);
+  const getEventEnd = (event) => new Date(`${event.date}T${event.timeEnd || "23:59:59"}`);
+  const approvedEvents = visibleEvents.filter(
+    (event) => String(event.status).toLowerCase() === "approved"
+  );
+  const now = new Date();
 
-    const userRole = user?.role;
-    const [isAddEventOpen, setIsAddEventOpen] = useState(false);
+  const upcomingEvents = [...approvedEvents]
+    .filter((event) => getEventStart(event) > now)
+    .sort((a, b) => getEventStart(a) - getEventStart(b));
 
+  const eventHistory = [...approvedEvents]
+    .filter((event) => getEventDate(event) < today)
+    .filter((event) => getEventDate(event).getFullYear() === today.getFullYear())
+    .sort((a, b) => getEventDate(b) - getEventDate(a));
 
-    /* Support both role naming formats */
-    const isSystemAdmin =
-        userRole === "system-admin" ||
-        userRole === "system_admin";
+  const currentEvent = approvedEvents.find(
+    (event) => getEventStart(event) <= now && getEventEnd(event) >= now
+  ) || null;
 
-    const isEventAdmin =
-        userRole === "event-admin" ||
-        userRole === "event_admin";
+  const totalEvents = visibleEvents.length;
+  const totalRegistrations = visibleEvents.reduce((sum, e) => sum + Number(e.registrations || 0), 0);
+  const totalAttendees = visibleEvents.reduce((sum, e) => sum + Number(e.attendees || 0), 0);
+  const activeEventAdmins = isSystemAdmin
+    ? new Set(visibleEvents.map((e) => e.eventAdmin).filter(Boolean)).size
+    : 0;
 
+  const summaryCards = [
+    { label: "Total Events", value: totalEvents, icon: faCalendarDays },
+    ...(isSystemAdmin ? [{ label: "Total Registrations", value: totalRegistrations, icon: faUsers }] : []),
+    { label: "Total Attendees", value: totalAttendees, icon: faUserCheck },
+    ...(isSystemAdmin ? [{ label: "Active Event Admins", value: activeEventAdmins, icon: faUserShield }] : []),
+  ];
 
-    /* =====================================================
-       ACCESS CONTROL
-       ===================================================== */
+  const pendingRegistrations = 0;
+  const studentsRegisteredToday = 0;
 
-    if (!isSystemAdmin && !isEventAdmin) {
+  const activityIcon = (type) => {
+    if (type === "attendance") return faUserCheck;
+    if (type === "certificate") return faCertificate;
+    if (type === "approval") return faCircleCheck;
+    return faCalendarDays;
+  };
 
-        return (
-            <div className="dashboard-page">
+  return (
+    <div className="dashboard-page">
+      {eventsError && <div className="dashboard-error-banner">{eventsError}</div>}
 
-                <div className="access-denied">
+      <div className="dashboard-content">
+        <header className="dashboard-welcome">
+          <div>
+            <p className="dashboard-eyebrow">
+              {isSystemAdmin ? "SYSTEM ADMINISTRATION" : "EVENT ADMINISTRATION"}
+            </p>
+            <h1>Welcome back{currentUser?.name ? `, ${currentUser.name}` : ""}!</h1>
+            <p>
+              Monitor events, attendance, registrations, and important
+              <br />
+              system activities from one place.
+            </p>
+          </div>
 
-                    <h2>Access Denied</h2>
+          <div className="dashboard-date">
+            <FontAwesomeIcon icon={faCalendarDays} />
+            <span>
+              {today.toLocaleDateString("en-US", {
+                weekday: "long", month: "long", day: "numeric", year: "numeric",
+              })}
+            </span>
+          </div>
+        </header>
 
-                    <p>
-                        You do not have permission to access this dashboard.
-                    </p>
-
-                    <p>
-                        Please contact your administrator if you need access.
-                    </p>
-
-                </div>
-
+        {/* TOP STATISTICS */}
+        <section className="dashboard-summary">
+          {summaryCards.map((card) => (
+            <div className="summary-card" key={card.label}>
+              <div className="summary-icon"><FontAwesomeIcon icon={card.icon} /></div>
+              <div className="summary-details">
+                <span>{card.label}</span>
+                <strong>{card.value.toLocaleString()}</strong>
+              </div>
             </div>
-        );
-    }
+          ))}
+        </section>
 
+        {/* SYSTEM ADMIN REGISTRATION INFORMATION */}
+        {isSystemAdmin && (
+          <section className="dashboard-section">
+            <div className="section-heading">
+              <div>
+                <p className="section-kicker">REGISTRATION OVERVIEW</p>
+                <h2>Registration Information</h2>
+              </div>
+            </div>
 
-    /* =====================================================
-       CURRENT DATE
-       ===================================================== */
-
-    const currentDate = new Date();
-
-    const formattedDate = currentDate.toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-    });
-
-    const formattedDay = currentDate.toLocaleDateString("en-US", {
-        weekday: "long",
-    });
-
-
-    /* =====================================================
-       EVENT ADMIN FILTERING
-       
-       System Admin:
-       → sees all events
-
-       Event Admin:
-       → only sees events assigned to them
-       ===================================================== */
-
-    const currentAdminName =
-        user?.fullname ||
-        user?.fullName ||
-        user?.name ||
-        "";
-
-
-    const visibleEvents = isSystemAdmin
-        ? events
-        : events.filter(
-              (event) =>
-                  event.eventAdmin?.toLowerCase() ===
-                  currentAdminName?.toLowerCase()
-          );
-
-
-    /* =====================================================
-       ROLE-BASED SUMMARY CARDS
-       ===================================================== */
-
-    const visibleSummary = summary.filter(
-        (item) => !item.systemAdminOnly || isSystemAdmin
-    );
-
-
-    /* =====================================================
-       ROLE-BASED QUICK ACTIONS
-       ===================================================== */
-
-    const quickActions = isSystemAdmin
-        ? [
-              {
-                  id: 1,
-                  title: "Manage Events",
-                  icon: faClipboardList,
-              },
-              {
-                  id: 2,
-                  title: "View Reports",
-                  icon: faChartBar,
-              },
-              {
-                  id: 3,
-                  title: "System Settings",
-                  icon: faCog,
-              },
-          ]
-        : [
-              {
-                  id: 1,
-                  title: "Create Event",
-                  icon: faPlus,
-              },
-              {
-                  id: 2,
-                  title: "Manage Events",
-                  icon: faClipboardList,
-              },
-              {
-                  id: 3,
-                  title: "Certificates",
-                  icon: faCertificate,
-              },
-              {
-                  id: 4,
-                  title: "View Reports",
-                  icon: faChartBar,
-              },
-          ];
-
-
-    /* =====================================================
-       ATTENDANCE STATISTICS
-       ===================================================== */
-
-    const totalExpected = visibleEvents.reduce(
-        (total, event) => total + event.expectedAttendees,
-        0
-    );
-
-    const totalAttendees = visibleEvents.reduce(
-        (total, event) => total + event.attendees,
-        0
-    );
-
-    const attendancePercentage =
-        totalExpected > 0
-            ? Math.round((totalAttendees / totalExpected) * 100)
-            : 0;
-
-
-    return (
-
-        <div className="dashboard-page">
-
-            {/* =================================================
-                WELCOME HEADER
-            ================================================= */}
-
-            <div className="dashboard-welcome">
-
+            <div className="registration-cards">
+              <div className="registration-info-card">
+                <div className="registration-info-icon"><FontAwesomeIcon icon={faUserClock} /></div>
                 <div>
+                  <span>Pending Approvals</span>
+                  <strong>{pendingRegistrations}</strong>
+                  <small>Registrations waiting for review</small>
+                </div>
+              </div>
 
-                    <h2>
-                        Welcome,{" "}
-                        {isSystemAdmin
-                            ? "System Administrator"
-                            : "Event Administrator"}{" "}
-                       ! 
-                    </h2>
+              <div className="registration-info-card">
+                <div className="registration-info-icon"><FontAwesomeIcon icon={faUserPlus} /></div>
+                <div>
+                  <span>Students Registered Today</span>
+                  <strong>{studentsRegisteredToday}</strong>
+                  <small>New student registrations today</small>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
 
-                    <p>
-                        Here's an overview of the Westmead Event Management
-                        System.
-                    </p>
+        {/* EVENT INFORMATION */}
+        <section className="dashboard-section">
+          <div className="section-heading">
+            <div>
+              <p className="section-kicker">EVENT INFORMATION</p>
+              <h2>Event Information</h2>
+            </div>
+          </div>
 
+          <div className="event-dashboard-layout">
+            <main className="event-main-column">
+
+              {/* CURRENT EVENT */}
+              <section className="dashboard-panel current-event-card">
+                <div className="panel-heading">
+                  <div>
+                    <p className="section-kicker">LIVE MONITORING</p>
+                    <h3>Current Event</h3>
+                  </div>
+                  {currentEvent && (
+                    <span className="live-badge"><span className="live-dot" />LIVE NOW</span>
+                  )}
                 </div>
 
+                {currentEvent ? (
+                  <div className="current-event-content">
+                    <div className="current-event-details">
+                      <h4>{currentEvent.eventName}</h4>
 
-                <div className="date-card">
+                      <div className="event-meta-grid">
+                        <div><FontAwesomeIcon icon={faCalendarDays} /><span>{formatDate(currentEvent.date)}</span></div>
+                        <div><FontAwesomeIcon icon={faClock} /><span>{currentEvent.time || "—"}</span></div>
+                        <div><FontAwesomeIcon icon={faLocationDot} /><span>{currentEvent.location || "—"}</span></div>
+                      </div>
 
-                    <div className="date-icon">
-
-                        <FontAwesomeIcon icon={faCalendarAlt} />
-
-                    </div>
-
-                    <div>
-
-                        <div className="date-day">
-                            {formattedDate}
-                        </div>
-
-                        <div className="date-week">
-                            {formattedDay}
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            {/* =================================================
-                SUMMARY CARDS
-            ================================================= */}
-
-            <div className="summary-row">
-
-                {visibleSummary.map((item) => (
-
-                    <div
-                        key={item.id}
-                        className="stat-card"
-                    >
-
-                        <div
-                            className="stat-icon"
-                            style={{
-                                background: item.color,
-                            }}
-                        >
-
-                            <FontAwesomeIcon
-                                icon={item.icon}
-                            />
-
-                        </div>
-
-
-                        <div className="stat-body">
-
-                            <div className="stat-title">
-                                {item.title}
-                            </div>
-
-                            <div className="stat-value">
-                                {item.value}
-                            </div>
-
-                            <div className="stat-status">
-                                ↑ {item.status}
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                ))}
-
-            </div>
-
-
-            {/* =================================================
-                MAIN GRID
-            ================================================= */}
-
-            <div className="main-grid">
-
-
-                {/* =================================================
-                    ATTENDEES PER EVENT CHART
-                ================================================= */}
-
-                <div className="panel-card chart-card">
-
-                    <div className="card-head">
-
+                      <div className="live-attendance-box">
                         <div>
+                          <span>Live Attendance</span>
+                          <strong>{currentEvent.attendees || 0}<small> / {currentEvent.expectedAttendees || 0}</small></strong>
+                        </div>
+                        <div className="attendance-progress">
+                          <div
+                            className="attendance-progress-fill"
+                            style={{
+                              width: `${Math.min(((currentEvent.attendees || 0) / (currentEvent.expectedAttendees || 1)) * 100, 100)}%`,
+                            }}
+                          />
+                        </div>
+                      </div>
 
-                            <h3>
-                                Attendees per Event
-                            </h3>
-
-                            <p className="chart-subtitle">
-                                Actual attendance compared with expected
-                                attendees
-                            </p>
-
+                      <div className="latest-attendees">
+                        <div className="subsection-title">
+                          <h5>Latest Attendees</h5>
+                          <button type="button" onClick={() => navigate("/attendance-reports")}>
+                            View Attendance <FontAwesomeIcon icon={faArrowRight} />
+                          </button>
                         </div>
 
-                        <div className="chart-summary">
+                        {currentEvent.latestAttendees?.length ? (
+                          <div className="latest-attendee-list">
+                            {currentEvent.latestAttendees.map((attendee) => (
+                              <div className="latest-attendee-row" key={attendee.id}>
+                                <div className="attendee-avatar">{attendee.name?.charAt(0) || "S"}</div>
+                                <div><strong>{attendee.name}</strong><span>{attendee.studentId}</span></div>
+                                <time>{attendee.time}</time>
+                              </div>
+                            ))}
+                          </div>
+                        ) : <div className="empty-small">No recent check-ins yet.</div>}
+                      </div>
+                    </div>
 
-                            <span>
-                                <FontAwesomeIcon icon={faUserCheck} />
-                                {attendancePercentage}% overall attendance
-                            </span>
-
+                    <div className="certificate-preview">
+                      <div className="subsection-title">
+                        <h5>Latest Certificate</h5>
+                        <FontAwesomeIcon icon={faCertificate} />
+                      </div>
+                      {currentEvent.latestCertificate ? (
+                        <div className="certificate-preview-box">
+                          <iframe title="Latest certificate preview" src={currentEvent.latestCertificate} />
                         </div>
-
+                      ) : (
+                        <div className="certificate-empty">
+                          <FontAwesomeIcon icon={faCertificate} />
+                          <strong>Certificate Preview</strong>
+                          <span>The latest generated certificate will appear here once the kiosk is connected to the backend.</span>
+                        </div>
+                      )}
                     </div>
+                  </div>
+                ) : (
+                  <div className="no-current-event">
+                    <div className="no-current-event-icon"><FontAwesomeIcon icon={faCalendarDays} /></div>
+                    <h4>No event is currently happening</h4>
+                    <p>Live attendance, latest check-ins, and certificate previews will appear here automatically when an approved event is currently running.</p>
+                  </div>
+                )}
+              </section>
 
-
-                    <div className="attendance-chart">
-
-                        {visibleEvents.length > 0 ? (
-
-                            visibleEvents.map((event) => {
-
-                                const percentage =
-                                    event.expectedAttendees > 0
-                                        ? Math.min(
-                                              Math.round(
-                                                  (event.attendees /
-                                                      event.expectedAttendees) *
-                                                      100
-                                              ),
-                                              100
-                                          )
-                                        : 0;
-
-                                return (
-
-                                    <div
-                                        key={event.id}
-                                        className="attendance-event"
-                                    >
-
-                                        <div className="attendance-event-header">
-
-                                            <div className="attendance-event-name">
-
-                                                <FontAwesomeIcon
-                                                    icon={faCalendarAlt}
-                                                />
-
-                                                <span>
-                                                    {event.name}
-                                                </span>
-
-                                            </div>
-
-                                            <strong>
-                                                {event.attendees.toLocaleString()}
-                                                /
-                                                {event.expectedAttendees.toLocaleString()}
-                                            </strong>
-
-                                        </div>
-
-
-                                        <div className="attendance-progress">
-
-                                            <div
-                                                className="attendance-progress-fill"
-                                                style={{
-                                                    width: `${percentage}%`,
-                                                }}
-                                            />
-
-                                        </div>
-
-
-                                        <div className="attendance-event-footer">
-
-                                            <span>
-                                                {percentage}% attendance
-                                            </span>
-
-                                            <span>
-                                                {event.expectedAttendees -
-                                                    event.attendees}{" "}
-                                                remaining
-                                            </span>
-
-                                        </div>
-
-                                    </div>
-
-                                );
-
-                            })
-
-                        ) : (
-
-                            <div className="empty-chart">
-
-                                <FontAwesomeIcon
-                                    icon={faChartColumn}
-                                />
-
-                                <h4>
-                                    No assigned events yet
-                                </h4>
-
-                                <p>
-                                    Events assigned to you will appear here.
-                                </p>
-
-                            </div>
-
-                        )}
-
-                    </div>
-
+              {/* UPCOMING EVENTS */}
+              <section className="dashboard-panel">
+                <div className="panel-heading">
+                  <div>
+                    <p className="section-kicker">SCHEDULE</p>
+                    <h3>Upcoming Events</h3>
+                  </div>
+                  <button type="button" className="text-action" onClick={() => navigate("/events")}>
+                    View All <FontAwesomeIcon icon={faArrowRight} />
+                  </button>
                 </div>
 
-
-                {/* =================================================
-                    UPCOMING EVENTS
-                ================================================= */}
-
-                <div className="panel-card upcoming-card">
-
-                    <div className="card-head">
-
-                        <h3>
-                            Upcoming Events
-                        </h3>
-
-                        <button
-                            type="button"
-                            className="view-all"
-                            onClick={() => navigate("/events")}
-                        >
-                            View All{" "}
-                            <FontAwesomeIcon icon={faArrowRight} />
-                        </button>
-
-                    </div>
-
-
-                    <div className="events-list">
-
-                        {visibleEvents.length > 0 ? (
-
-                            visibleEvents
-                                .slice(0, 4)
-                                .map((event) => (
-
-                                    <div
-                                        key={event.id}
-                                        className="event-item"
-                                    >
-
-                                        <div className="event-thumb">
-
-                                            <FontAwesomeIcon
-                                                icon={faCalendarAlt}
-                                            />
-
-                                        </div>
-
-
-                                        <div className="event-body">
-
-                                            <div className="event-name">
-                                                {event.name}
-                                            </div>
-
-                                            <div className="event-meta">
-
-                                                {event.date} •{" "}
-                                                {event.expectedAttendees} expected
-
-                                            </div>
-
-                                        </div>
-
-
-                                        <span
-                                            className={`badge ${
-                                                event.status === "Active"
-                                                    ? "active"
-                                                    : "upcoming"
-                                            }`}
-                                        >
-                                            {event.status}
-                                        </span>
-
-                                    </div>
-
-                                ))
-
-                        ) : (
-
-                            <div className="empty-events">
-
-                                <FontAwesomeIcon
-                                    icon={faCalendarAlt}
-                                />
-
-                                <p>
-                                    No assigned events found.
-                                </p>
-
-                            </div>
-
-                        )}
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            {/* =================================================
-                LOWER GRID
-            ================================================= */}
-
-            <div className="lower-grid">
-
-
-                {/* =================================================
-                    RECENT ACTIVITIES
-                ================================================= */}
-
-                <div className="panel-card activities-card">
-
-                    <div className="card-head">
-
-                        <h3>
-                            Recent Activities
-                        </h3>
-
-                        <button
-                            type="button"
-                            className="view-all"
-                        >
-                            View All{" "}
-                            <FontAwesomeIcon icon={faArrowRight} />
-                        </button>
-
-                    </div>
-
-
-                    <div className="activities">
-
-                        {activities.map((activity) => (
-
-                            <div
-                                key={activity.id}
-                                className="activity-row"
-                            >
-
-                                <div className="act-dot" />
-
-                                <div className="act-text">
-                                    {activity.text}
-                                </div>
-
-                                <div className="act-time">
-                                    {activity.time}
-                                </div>
-
-                            </div>
-
+                {upcomingEvents.length ? (
+                  <div className="dashboard-table-wrapper">
+                    <table className="dashboard-table">
+                      <thead>
+                        <tr><th>Event</th><th>Date</th><th>Time</th>{isSystemAdmin && <th>Event Admin</th>}<th>Status</th></tr>
+                      </thead>
+                      <tbody>
+                        {upcomingEvents.slice(0, 5).map((event) => (
+                          <tr key={event.id}>
+                            <td><div className="event-name-cell"><strong>{event.eventName}</strong><span>{event.location || "Location not set"}</span></div></td>
+                            <td>{formatDate(event.date)}</td>
+                            <td>{event.time || "—"}</td>
+                            {isSystemAdmin && <td>{event.eventAdmin || "—"}</td>}
+                            <td><span className={`status-badge status-${String(event.status).toLowerCase()}`}>{event.status === "approved" ? "Approved" : event.status}</span></td>
+                          </tr>
                         ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="empty-state"><FontAwesomeIcon icon={faCalendarDays} /><span>No upcoming events found.</span></div>
+                )}
+              </section>
 
-                    </div>
-
+              {/* EVENT HISTORY */}
+              <section className="dashboard-panel">
+                <div className="panel-heading">
+                  <div>
+                    <p className="section-kicker">CURRENT YEAR</p>
+                    <h3>Event History</h3>
+                  </div>
                 </div>
 
-
-                {/* =================================================
-                    QUICK ACTIONS
-                ================================================= */}
-
-                <div className="panel-card quick-card">
-
-                    <h3>
-                        Quick Actions
-                    </h3>
-
-                    <p className="quick-subtitle">
-                        Quickly access frequently used functions.
-                    </p>
-
-
-                    <div className="quick-grid">
-
-                        {quickActions.map((action) => (
-
-                            <button
-                                key={action.id}
-                                type="button"
-                                className="quick"
-                                onClick={() => {
-
-                                    if (
-                                        action.title === "Create Event"
-                                    ) {
-                                        setIsAddEventOpen(true);
-                                    }
-
-                                    if (action.title === "Manage Events") {
-                                        navigate("/events");
-                                    }
-
-                                    if (
-                                        action.title === "Certificates"
-                                    ) {
-                                        navigate(
-                                            "/event-admin/certificates"
-                                        );
-                                    }
-
-                                    if (
-                                        action.title === "View Reports"
-                                    ) {
-                                        navigate(
-                                            "/attendance-reports"
-                                        );
-                                    }
-
-                                    if (
-                                        action.title === "System Settings"
-                                    ) {
-                                        navigate(
-                                            "/system-settings"
-                                        );
-                                    }
-
-                                }}
-                            >
-
-                                <FontAwesomeIcon
-                                    icon={action.icon}
-                                />
-
-                                <span>
-                                    {action.title}
-                                </span>
-
-                            </button>
-
+                {eventHistory.length ? (
+                  <div className="dashboard-table-wrapper">
+                    <table className="dashboard-table history-table">
+                      <thead><tr><th>Event</th><th>Date</th><th>Attendance</th><th>Certificates</th></tr></thead>
+                      <tbody>
+                        {eventHistory.slice(0, 5).map((event) => (
+                          <tr key={event.id}>
+                            <td><div className="event-name-cell"><strong>{event.eventName}</strong><span>{event.location || "—"}</span></div></td>
+                            <td>{formatDate(event.date)}</td>
+                            <td><strong>{Number(event.attendees || 0).toLocaleString()}</strong><span className="table-muted"> / {Number(event.expectedAttendees || 0).toLocaleString()}</span></td>
+                            <td>{Number(event.certificates || 0).toLocaleString()}</td>
+                          </tr>
                         ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="empty-state"><FontAwesomeIcon icon={faFileCircleCheck} /><span>No event history for this year.</span></div>
+                )}
+              </section>
+            </main>
 
+            {/* RIGHT COLUMN: PENDING ACTIONS → RECENT ACTIVITIES → QUICK ACTIONS */}
+            <aside className="event-side-column">
+
+              <section className="dashboard-panel side-panel">
+                <div className="panel-heading">
+                  <div><p className="section-kicker">ATTENTION</p><h3>Pending Actions</h3></div>
+                  <FontAwesomeIcon className="panel-heading-icon" icon={faBell} />
+                </div>
+                <div className="pending-action-list">
+                  {pendingActions.map((action) => (
+                    <button
+                      type="button"
+                      className="pending-action-item"
+                      key={action.id}
+                      onClick={() => navigate("/events")}
+                    >
+                      <span className="pending-action-icon"><FontAwesomeIcon icon={action.icon} /></span>
+                      <span className="pending-action-copy"><strong>{action.title}</strong><small>{action.description}</small></span>
+                      <FontAwesomeIcon className="pending-action-arrow" icon={faArrowRight} />
+                    </button>
+                  ))}
+                </div>
+              </section>
+
+              <section className="dashboard-panel side-panel">
+                <div className="panel-heading">
+                  <div><p className="section-kicker">SYSTEM ACTIVITY</p><h3>Recent Activities</h3></div>
+                </div>
+                <div className="activity-list">
+                  {recentActivities.map((activity) => (
+                    <div className="activity-item" key={activity.id}>
+                      <div className="activity-icon"><FontAwesomeIcon icon={activityIcon(activity.type)} /></div>
+                      <div className="activity-copy">
+                        <strong>{activity.title}</strong>
+                        <p>{activity.description}</p>
+                        <time>{activity.time}</time>
+                      </div>
                     </div>
+                  ))}
+                </div>
+              </section>
 
+              {/* QUICK ACTIONS IS UNDER RECENT ACTIVITIES */}
+              <section className="dashboard-panel side-panel quick-actions-panel">
+                <div className="panel-heading">
+                  <div><p className="section-kicker">SHORTCUTS</p><h3>Quick Actions</h3></div>
+                  <FontAwesomeIcon className="panel-heading-icon" icon={faPlus} />
                 </div>
 
-            </div>
+                <div className="quick-actions-list">
+                  <button type="button" className="quick-action-button" onClick={() => navigate("/events")}>
+                    <span><FontAwesomeIcon icon={faPlus} /></span>
+                    <div><strong>Create Event</strong><small>Add a new event</small></div>
+                    <FontAwesomeIcon className="quick-action-arrow" icon={faArrowRight} />
+                  </button>
 
-            <AddEvent
-                isOpen={isAddEventOpen}
-                onClose={() => setIsAddEventOpen(false)}
-                onCreate={() => {
-                    setIsAddEventOpen(false);
-                    navigate("/events");
-                }}
-            />
-        </div>
-    );
-}
+                  {isSystemAdmin && (
+                    <button type="button" className="quick-action-button" onClick={() => navigate("/users")}>
+                      <span><FontAwesomeIcon icon={faUserPlus} /></span>
+                      <div><strong>Add Event Admin</strong><small>Create an event administrator</small></div>
+                      <FontAwesomeIcon className="quick-action-arrow" icon={faArrowRight} />
+                    </button>
+                  )}
+
+                  <button type="button" className="quick-action-button" onClick={() => navigate("/certificates")}>
+                    <span><FontAwesomeIcon icon={faCertificate} /></span>
+                    <div><strong>Certificates</strong><small>Manage certificate templates</small></div>
+                    <FontAwesomeIcon className="quick-action-arrow" icon={faArrowRight} />
+                  </button>
+                </div>
+              </section>
+            </aside>
+          </div>
+        </section>
+      </div>
+
+    </div>
+  );
+};
 
 export default Dashboard;

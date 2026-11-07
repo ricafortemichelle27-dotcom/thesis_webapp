@@ -1,4 +1,4 @@
-import { deleteCookie } from '../../utils/cookiesUtils.js';
+import { deleteCookie, getCurrentUser } from '../../utils/cookiesUtils.js';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -9,13 +9,18 @@ import {
     faBell,
     faUser,
     faBars,
-    faSearch
+    faMagnifyingGlass,
+    faChevronDown,
+    faRightFromBracket
 } from '../../utils/icons.js';
 
 import './Header.css';
 
 function Header({ onMenuClick }) {
     const navigate = useNavigate();
+    const user = getCurrentUser();
+    const isEventAdmin = user?.role === 'event_admin' || user?.role === 'event-admin';
+    const eventAdminName = user?.fullname || user?.name || user?.fullName;
 
     // Logout
     const handleLogout = () => {
@@ -42,7 +47,7 @@ function Header({ onMenuClick }) {
 
                     {/* Search Bar */}
                     <div className="header-search">
-                        <FontAwesomeIcon icon={faSearch} />
+                        <FontAwesomeIcon icon={faMagnifyingGlass} />
                         <input
                             type="text"
                             placeholder="Search..."
@@ -67,7 +72,7 @@ function Header({ onMenuClick }) {
                             onClick={() => setIsProfileOpen(!isProfileOpen)}
                         >
                             <FontAwesomeIcon icon={faUser} />
-                            <span> ▼</span>
+                            <FontAwesomeIcon icon={faChevronDown} />
                         </button>
 
                         {isProfileOpen && (
@@ -82,12 +87,19 @@ function Header({ onMenuClick }) {
                                     Profile
                                 </button>
 
+                                {isEventAdmin && eventAdminName && (
+                                    <div className="profile-admin-name">
+                                        {eventAdminName}
+                                    </div>
+                                )}
+
                                 {/* Logout Button */}
                                 <button
                                     className='settings-btn'
                                     type='button'
                                     onClick={handleLogout}
                                 >
+                                    <FontAwesomeIcon icon={faRightFromBracket} />
                                     Logout
                                 </button>
 

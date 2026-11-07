@@ -1,0 +1,645 @@
+/* =========================================
+   PHOTOBOOTH PAGE
+   ========================================= */
+
+.event-photobooth-page {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+
+    padding: 24px 32px 30px;
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #ffffff;
+
+    overflow: hidden;
+}
+
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.photobooth-header {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    text-align: center;
+
+    margin-bottom: 18px;
+
+    flex-shrink: 0;
+}
+
+.event-page-kicker {
+    margin: 0 0 4px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    color: #8c0925;
+
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.photobooth-header h1 {
+    margin: 0;
+
+    font-size: clamp(28px, 3vw, 40px);
+
+    line-height: 1.1;
+
+    font-weight: 800;
+
+    color: #14213d;
+}
+
+
+/* =========================================
+   CAMERA SECTION
+   ========================================= */
+
+.photobooth-camera-section {
+    width: 100%;
+
+    flex: 1;
+
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+}
+
+
+/* =========================================
+   CAMERA FRAME
+   ========================================= */
+
+.photobooth-camera-frame {
+    position: relative;
+
+    width: 100%;
+
+    /*
+     * Large camera area while still leaving
+     * room for the title and Take Photo button.
+     */
+    height: min(
+        calc(100vh - 285px),
+        600px
+    );
+
+    min-height: 400px;
+
+    overflow: hidden;
+
+    background: #111111;
+
+    border-radius: 16px;
+
+    border: 4px solid #650b20;
+
+    box-sizing: border-box;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.16);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* =========================================
+   LIVE CAMERA
+   ========================================= */
+
+.photobooth-video {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    /*
+     * Selfie-camera appearance.
+     */
+    transform: scaleX(-1);
+
+    display: block;
+
+    background: #111111;
+}
+
+
+/* =========================================
+   CAMERA OVERLAY
+   ========================================= */
+
+.photobooth-camera-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.18),
+            transparent 20%,
+            transparent 80%,
+            rgba(0, 0, 0, 0.18)
+        );
+}
+
+
+/* =========================================
+   COUNTDOWN
+   ========================================= */
+
+.photobooth-countdown {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: 135px;
+    height: 135px;
+
+    border-radius: 50%;
+
+    background: rgba(0, 0, 0, 0.60);
+
+    border: 5px solid #f4c430;
+
+    color: #ffffff;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 76px;
+
+    font-weight: 900;
+
+    line-height: 1;
+
+    z-index: 5;
+
+    text-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.7);
+
+    animation: countdownPulse 1s ease-in-out infinite;
+}
+
+@keyframes countdownPulse {
+
+    0% {
+        transform:
+            translate(-50%, -50%)
+            scale(0.92);
+    }
+
+    50% {
+        transform:
+            translate(-50%, -50%)
+            scale(1);
+    }
+
+    100% {
+        transform:
+            translate(-50%, -50%)
+            scale(0.92);
+    }
+}
+
+
+/* =========================================
+   CAMERA ERROR
+   ========================================= */
+
+.photobooth-camera-error {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 10;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 16px;
+
+    padding: 30px;
+
+    text-align: center;
+
+    background: rgba(0, 0, 0, 0.72);
+
+    color: #ffffff;
+
+    font-size: 16px;
+
+    font-weight: 600;
+}
+
+.photobooth-camera-error button {
+    border: none;
+
+    background: #f4c430;
+
+    color: #650b20;
+
+    padding: 12px 24px;
+
+    border-radius: 8px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+.photobooth-camera-error button:hover {
+    background: #ffd84d;
+}
+
+
+/* =========================================
+   START CAMERA
+   ========================================= */
+
+.photobooth-camera-message {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 5;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.photobooth-camera-message button {
+    border: none;
+
+    background: #f4c430;
+
+    color: #650b20;
+
+    padding: 14px 28px;
+
+    border-radius: 9px;
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 7px 18px rgba(0, 0, 0, 0.25);
+}
+
+.photobooth-camera-message button:hover {
+    background: #ffd84d;
+}
+
+
+/* =========================================
+   TAKE PHOTO BUTTON
+   ========================================= */
+
+.photobooth-controls {
+    width: 100%;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    padding: 14px 0 0;
+
+    flex-shrink: 0;
+}
+
+.photobooth-capture-button {
+    min-width: 205px;
+
+    border: none;
+
+    background: #650b20;
+
+    color: #ffffff;
+
+    padding: 12px 28px;
+
+    border-radius: 50px;
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.photobooth-capture-button:hover:not(:disabled) {
+    background: #8c0925;
+
+    transform: translateY(-2px);
+}
+
+.photobooth-capture-button:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================
+   CAMERA SHUTTER
+   ========================================= */
+
+.capture-button-circle {
+    width: 20px;
+    height: 20px;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    border: 3px solid #f4c430;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   CAPTURED PHOTO
+   ========================================= */
+
+.photobooth-result {
+    width: 100%;
+
+    flex: 1;
+
+    min-height: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 18px;
+}
+
+.photobooth-result-image-wrapper {
+    width: min(850px, 90%);
+
+    max-height: calc(100vh - 320px);
+
+    overflow: hidden;
+
+    border-radius: 14px;
+
+    border: 4px solid #650b20;
+
+    background: #111111;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.16);
+}
+
+.photobooth-result-image {
+    width: 100%;
+
+    max-height: calc(100vh - 320px);
+
+    object-fit: contain;
+
+    display: block;
+}
+
+
+/* =========================================
+   PHOTO RESULT CONTENT
+   ========================================= */
+
+.photobooth-result-content {
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+}
+
+.photobooth-result-content h2 {
+    margin: 0 0 14px;
+
+    color: #14213d;
+
+    font-size: 22px;
+}
+
+
+/* =========================================
+   PHOTO CHOICES
+   ========================================= */
+
+.photobooth-choice-buttons {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+}
+
+.choice-button {
+    min-width: 210px;
+
+    padding: 12px 18px;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    background: #ffffff;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.highlight-choice {
+    border: 2px solid #650b20;
+
+    color: #650b20;
+}
+
+.highlight-choice:hover,
+.highlight-choice.selected {
+    background: #650b20;
+
+    color: #ffffff;
+}
+
+.private-choice {
+    border: 2px solid #555555;
+
+    color: #333333;
+}
+
+.private-choice:hover,
+.private-choice.selected {
+    background: #333333;
+
+    color: #ffffff;
+}
+
+
+/* =========================================
+   RESULT BUTTONS
+   ========================================= */
+
+.photobooth-result-actions {
+    margin-top: 14px;
+
+    display: flex;
+
+    gap: 12px;
+}
+
+.retake-button,
+.finish-button {
+    min-width: 130px;
+
+    padding: 11px 20px;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+.retake-button {
+    border: 2px solid #650b20;
+
+    background: #ffffff;
+
+    color: #650b20;
+}
+
+.retake-button:hover {
+    background: #650b20;
+
+    color: #ffffff;
+}
+
+.finish-button {
+    border: 2px solid #f4c430;
+
+    background: #f4c430;
+
+    color: #650b20;
+}
+
+.finish-button:hover:not(:disabled) {
+    background: #ffd84d;
+}
+
+.finish-button:disabled {
+    opacity: 0.45;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================
+   HIDDEN CANVAS
+   ========================================= */
+
+.photobooth-hidden-canvas {
+    display: none;
+}
+
+
+/* =========================================
+   SMALL LAPTOP SCREENS
+   ========================================= */
+
+@media (max-height: 800px) {
+
+    .event-photobooth-page {
+        padding-top: 16px;
+        padding-bottom: 14px;
+    }
+
+    .photobooth-header {
+        margin-bottom: 10px;
+    }
+
+    .photobooth-header h1 {
+        font-size: 32px;
+    }
+
+    .photobooth-camera-frame {
+        height: calc(100vh - 245px);
+
+        min-height: 350px;
+    }
+
+    .photobooth-controls {
+        padding-top: 9px;
+    }
+
+    .photobooth-capture-button {
+        padding: 10px 25px;
+    }
+}

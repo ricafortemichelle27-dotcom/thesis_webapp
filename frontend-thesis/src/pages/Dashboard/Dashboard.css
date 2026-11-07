@@ -1,95 +1,289 @@
 /* =========================================================
-   DASHBOARD
+   FONT
+   ========================================================= */
+
+/* Import Poppins font from Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+
+/* =========================================================
+   COLOR VARIABLES
+   ========================================================= */
+
+:root {
+  /* Main school colors */
+  --dashboard-maroon: #7a0019;
+  --dashboard-maroon-dark: #650014;
+
+  /* Main page colors */
+  --dashboard-bg: #fffaf8;
+
+  /* Card and panel background */
+  --dashboard-surface: #ffffff;
+
+  /* Main text color */
+  --dashboard-text: #1f1a1b;
+
+  /* Secondary/muted text */
+  --dashboard-muted: #5d4a52;
+
+  /* Border color */
+  --dashboard-border: #eadfe1;
+
+  /* Status colors */
+  --dashboard-success: #2e7d32;
+  --dashboard-warning: #a86b00;
+
+  /* Card shadow */
+  --dashboard-shadow: 0 8px 24px rgba(101, 0, 20, 0.08);
+}
+
+
+/* =========================================================
+   MAIN DASHBOARD PAGE
    ========================================================= */
 
 .dashboard-page {
-    width: 100%;
-    min-height: 100%;
-    padding: 32px;
-    box-sizing: border-box;
-    background:
-        radial-gradient(
-            circle at top right,
-            rgba(101, 11, 32, 0.08),
-            transparent 30%
-        ),
-        var(--color-background);
-    color: var(--color-text);
+  min-height: 100vh;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(122, 0, 25, 0.08),
+      transparent 28%
+    ),
+    var(--dashboard-bg);
+
+  font-family: "Poppins", sans-serif;
+  color: var(--dashboard-text);
+}
+
+
+.dashboard-page .panel-heading-icon,
+.dashboard-page .event-meta-grid svg,
+.dashboard-page .certificate-empty svg {
+  color: #ffffff;
+}
+
+
+/* Make sizing more predictable */
+.dashboard-page *,
+.dashboard-page *::before,
+.dashboard-page *::after {
+  box-sizing: border-box;
 }
 
 
 /* =========================================================
-   WELCOME SECTION
+   ERROR MESSAGE
+   ========================================================= */
+
+.dashboard-error-banner {
+  margin: 18px 30px 0;
+  padding: 12px 16px;
+
+  border: 1px solid #edc7cd;
+  border-radius: 10px;
+
+  background: #fff0f2;
+  color: var(--dashboard-maroon-dark);
+
+  font-size: 0.8rem;
+}
+
+
+/* =========================================================
+   MAIN CONTENT AREA
+   ========================================================= */
+
+.dashboard-content {
+  width: 100%;
+  max-width: 1600px;
+
+  margin: auto;
+  padding: 30px;
+}
+
+
+/* =========================================================
+   WELCOME / HERO SECTION
    ========================================================= */
 
 .dashboard-welcome {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    margin-bottom: 28px;
+  position: relative;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 30px;
+
+  min-height: 245px;
+
+  margin-bottom: 26px;
+  padding: 38px 40px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(122, 0, 25, 0.12);
+  border-radius: 20px;
+
+  background: var(--dashboard-maroon-dark);
+
+  color: #ffffff;
+
+  box-shadow:
+    0 12px 30px rgba(101, 0, 20, 0.12);
 }
 
-.dashboard-welcome h2 {
-    margin: 0;
-    font-size: 32px;
-    color: #1b0f15;
-    font-weight: 900;
-    letter-spacing: 0;
-    line-height: 1.15;
+
+/*
+  Keep the photo on the right and fade its left edge into
+  the maroon panel behind the welcome copy.
+*/
+.dashboard-welcome::before {
+  content: "";
+
+  position: absolute;
+  inset: 0 0 0 34%;
+
+  background: url("/src/assets/images/wis.png") right center / cover no-repeat;
+
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.35) 20%,
+    #000 48%,
+    #000 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.35) 20%,
+    #000 48%,
+    #000 100%
+  );
 }
 
-.dashboard-welcome p {
-    margin: 8px 0 0;
-    color: var(--color-text-secondary);
-    font-size: 14px;
+
+/*
+  Gold decorative line at the bottom of the welcome banner.
+*/
+.dashboard-welcome::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  width: 42%;
+  height: 5px;
+
+  background: #f4c430;
+}
+
+
+/*
+  Left side of welcome section.
+*/
+.dashboard-welcome > div:first-child {
+  position: relative;
+  z-index: 2;
+
+  max-width: 650px;
+}
+
+
+/*
+  Small title above Welcome Back.
+*/
+.dashboard-eyebrow {
+  margin: 0 0 8px;
+
+  color: #f4c430;
+
+  font-size: 0.72rem;
+  font-weight: 700;
+
+  letter-spacing: 0.16em;
+
+  text-transform: uppercase;
+}
+
+
+/*
+  Main Welcome Back heading.
+*/
+.dashboard-welcome h1 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: clamp(2rem, 3vw, 3rem);
+
+  font-weight: 700;
+
+  line-height: 1.15;
+
+  letter-spacing: -0.02em;
+}
+
+
+/*
+  Description below Welcome Back.
+*/
+.dashboard-welcome > div:first-child > p:last-child {
+  max-width: 620px;
+
+  margin: 12px 0 0;
+
+  color: rgba(255, 255, 255, 0.92);
+
+  font-size: 0.9rem;
+
+  line-height: 1.7;
 }
 
 
 /* =========================================================
-   DATE CARD
+   DATE BOX
    ========================================================= */
 
-.date-card {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    padding: 13px 17px;
-    min-width: 185px;
-    border-radius: 16px;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 5px 20px rgba(64, 20, 31, 0.04);
-    white-space: nowrap;
-    transition: transform 180ms ease, box-shadow 180ms ease;
+.dashboard-date {
+  position: absolute;
+  top: 28px;
+  right: 40px;
+  z-index: 3;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  flex-shrink: 0;
+
+  padding: 12px 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  color: var(--dashboard-maroon);
+
+  font-size: 0.78rem;
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
-.date-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 26px rgba(64, 20, 31, 0.09);
-}
 
-.date-icon {
-    display: grid;
-    place-items: center;
-    width: 43px;
-    height: 43px;
-    border-radius: 12px;
-    background: #f9e8e8;
-    color: #800000;
-    font-size: 17px;
-}
-
-.date-day {
-    font-size: 14px;
-    font-weight: 800;
-    color: #321010;
-}
-
-.date-week {
-    margin-top: 3px;
-    font-size: 12px;
-    color: #817070;
+.dashboard-date svg {
+  color: var(--dashboard-maroon);
 }
 
 
@@ -97,849 +291,1558 @@
    SUMMARY CARDS
    ========================================================= */
 
-.summary-row {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 17px;
-    margin-bottom: 28px;
+.dashboard-summary {
+  display: grid;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 16px;
+
+  margin-bottom: 30px;
 }
 
-.stat-card {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    min-height: 108px;
-    padding: 19px;
-    overflow: hidden;
-    border-radius: 16px;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 5px 20px rgba(64, 20, 31, 0.04);
-    transition:
-        transform 180ms ease,
-        box-shadow 180ms ease,
-        border-color 180ms ease;
+
+/*
+  Individual summary card.
+*/
+.summary-card {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  min-height: 112px;
+
+  padding: 20px 22px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(122, 0, 25, 0.10);
+
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 22px rgba(101, 0, 20, 0.07);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-/* Decorative maroon strip */
-.stat-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: #800000;
-    opacity: 0;
-    transition: opacity 180ms ease;
+
+.summary-card::after {
+  display: none;
 }
 
-.stat-card:hover {
-    transform: translateY(-5px);
-    border-color: #d9b7b7;
-    box-shadow: 0 15px 32px rgba(74, 0, 0, 0.11);
+
+/*
+  Small hover effect.
+*/
+.summary-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 12px 28px rgba(101, 0, 20, 0.12);
 }
 
-.stat-card:hover::before {
-    opacity: 1;
+
+/*
+  Icon inside summary card.
+*/
+.summary-icon {
+  display: grid;
+
+  width: 50px;
+  height: 50px;
+
+  margin-right: 16px;
+
+  flex: 0 0 50px;
+
+  place-items: center;
+
+  border-radius: 14px;
+
+  background: var(--dashboard-maroon);
+
+  color: #ffffff;
+
+  font-size: 1.15rem;
 }
 
-.stat-icon {
-    display: grid;
-    place-items: center;
-    width: 60px;
-    height: 60px;
-    flex-shrink: 0;
-    border-radius: 16px;
-    font-size: 21px;
-    color: #700000;
-    box-shadow: inset 0 0 0 1px rgba(128, 0, 0, 0.04);
+
+/*
+  Summary text.
+*/
+.summary-details span,
+.summary-details strong {
+  display: block;
 }
 
-.stat-body {
-    min-width: 0;
+
+/*
+  Summary label.
+*/
+.summary-details span {
+  margin-bottom: 3px;
+
+  color: #3f3337;
+
+  font-size: 0.75rem;
+
+  font-weight: 600;
 }
 
-.stat-title {
-    font-size: 12px;
-    color: #766666;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.45px;
-}
 
-.stat-value {
-    margin-top: 4px;
-    font-size: 29px;
-    font-weight: 900;
-    line-height: 1.1;
-    color: #2d0909;
-}
+/*
+  Summary number.
+*/
+.summary-details strong {
+  color: var(--dashboard-maroon-dark);
 
-.stat-status {
-    margin-top: 5px;
-    font-size: 11px;
-    color: #7b7777;
+  font-size: 1.7rem;
+
+  font-weight: 700;
+
+  line-height: 1.15;
 }
 
 
 /* =========================================================
-   MAIN / LOWER GRID
+   REGISTRATION SECTION
    ========================================================= */
 
-.main-grid,
-.lower-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
-}
-
-.lower-grid {
-    margin-top: 20px;
+.dashboard-section {
+  margin-bottom: 30px;
 }
 
 
 /* =========================================================
-   PANEL CARDS
+   SECTION HEADINGS
    ========================================================= */
 
-.panel-card {
-    position: relative;
-    background: var(--color-surface);
-    border-radius: 20px;
-    border: 1px solid var(--color-border);
-    box-shadow: 0 8px 28px rgba(64, 20, 31, 0.05);
-    padding: 20px;
-    overflow: hidden;
+.section-heading {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: flex-end;
+
+  margin-bottom: 14px;
 }
 
-.panel-card::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 120px;
-    height: 120px;
-    background: radial-gradient(
-        circle,
-        rgba(128, 0, 0, 0.035) 0%,
-        transparent 70%
+
+/*
+  Small section label.
+*/
+.section-heading .section-kicker {
+  margin: 0 0 5px;
+
+  color: var(--dashboard-maroon);
+
+  font-size: 0.7rem;
+
+  font-weight: 700;
+
+  letter-spacing: 0.14em;
+
+  text-transform: uppercase;
+}
+
+
+/*
+  Main section title.
+*/
+.section-heading h2 {
+  margin: 0;
+
+  color: #1f1a1b;
+
+  font-size: 1.25rem;
+
+  font-weight: 700;
+
+  line-height: 1.3;
+}
+
+
+/* =========================================================
+   REGISTRATION CARDS
+   ========================================================= */
+
+.registration-cards {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+
+/*
+  Registration information card.
+*/
+.registration-info-card {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  gap: 17px;
+
+  min-height: 112px;
+
+  padding: 20px 22px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(122, 0, 25, 0.10);
+
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 22px rgba(101, 0, 20, 0.06);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.registration-info-card::before {
+  display: none;
+}
+
+
+/*
+  Hover effect.
+*/
+.registration-info-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 12px 26px rgba(101, 0, 20, 0.10);
+}
+
+
+/*
+  Registration icon.
+*/
+.registration-info-icon {
+  display: grid;
+
+  width: 50px;
+  height: 50px;
+
+  flex: 0 0 50px;
+
+  place-items: center;
+
+  border-radius: 14px;
+
+  background: var(--dashboard-maroon);
+
+  color: #ffffff;
+
+  font-size: 1.1rem;
+}
+
+
+/*
+  Registration text.
+*/
+.registration-info-card span,
+.registration-info-card strong,
+.registration-info-card small {
+  display: block;
+}
+
+
+/*
+  Registration label.
+*/
+.registration-info-card span {
+  color: #3f3337;
+
+  font-size: 0.76rem;
+
+  font-weight: 600;
+}
+
+
+/*
+  Registration number.
+*/
+.registration-info-card strong {
+  margin-top: 2px;
+
+  color: var(--dashboard-maroon-dark);
+
+  font-size: 1.5rem;
+
+  font-weight: 700;
+}
+
+
+/*
+  Registration description.
+*/
+.registration-info-card small {
+  margin-top: 2px;
+
+  color: #6b5c61;
+
+  font-size: 0.68rem;
+}
+
+
+/* =========================================================
+   EVENT DASHBOARD LAYOUT
+   ========================================================= */
+
+.event-dashboard-layout {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) 330px;
+
+  align-items: start;
+
+  gap: 20px;
+}
+
+
+/*
+  Main and side columns.
+*/
+.event-main-column,
+.event-side-column {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+
+/*
+  General dashboard panel/card.
+*/
+.dashboard-panel {
+  min-width: 0;
+
+  overflow: hidden;
+
+  border: 1px solid var(--dashboard-border);
+
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 24px rgba(101, 0, 20, 0.07);
+}
+
+
+/*
+  Gold line at top of current event card.
+*/
+.current-event-card {
+  position: relative;
+
+  overflow: hidden;
+
+  border-top: 1px solid var(--dashboard-border);
+}
+
+
+/*
+  Decorative background effect inside current event.
+*/
+.current-event-card::before {
+  content: "";
+
+  position: absolute;
+
+  right: -100px;
+  bottom: -120px;
+
+  width: 300px;
+  height: 300px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(101, 0, 20, 0.08),
+      transparent 70%
     );
-    pointer-events: none;
-}
 
-.card-head {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-}
-
-.card-head h3,
-.quick-card h3 {
-    margin: 0;
-    font-size: 17px;
-    color: #2d0909;
-    font-weight: 850;
-}
-
-.view-all,
-.filter-btn {
-    border: none;
-    cursor: pointer;
+  pointer-events: none;
 }
 
 
 /* =========================================================
-   CHART HEADER
+   PANEL HEADINGS
    ========================================================= */
 
-.chart-subtitle {
-    margin: 5px 0 0;
-    color: #8a7a7a;
-    font-size: 12px;
+.panel-heading {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: flex-start;
+
+  gap: 14px;
+
+  padding: 18px 20px;
+
+  border-bottom: 1px solid var(--dashboard-border);
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff,
+      #fffaf8
+    );
 }
 
-.chart-summary {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
+
+/*
+  Panel title.
+*/
+.panel-heading h3 {
+  margin: 0;
+
+  color: var(--dashboard-maroon-dark);
+
+  font-size: 1rem;
+
+  font-weight: 700;
 }
 
-.chart-summary span {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 8px 11px;
-    border-radius: 10px;
-    background: #fbefef;
-    color: #7d0000;
-    font-size: 11px;
-    font-weight: 800;
+
+/*
+  Panel icon.
+*/
+.panel-heading-icon {
+  color: var(--dashboard-maroon);
 }
 
-.chart-summary svg {
-    font-size: 12px;
+
+/*
+  Text buttons/actions.
+*/
+.text-action,
+.subsection-title button {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: var(--dashboard-maroon);
+
+  font-family: inherit;
+
+  font-size: 0.7rem;
+
+  font-weight: 600;
+
+  cursor: pointer;
 }
 
 
 /* =========================================================
-   ATTENDEES PER EVENT CHART
+   CURRENT EVENT
    ========================================================= */
 
-.attendance-chart {
-    display: flex;
-    flex-direction: column;
-    gap: 17px;
-    margin-top: 22px;
-}
+.current-event-content {
+  display: grid;
 
-.attendance-event {
-    padding: 13px 14px;
-    border-radius: 14px;
-    background: #fffafa;
-    border: 1px solid #f1e5e5;
-    transition:
-        transform 160ms ease,
-        border-color 160ms ease,
-        box-shadow 160ms ease;
-}
+  grid-template-columns:
+    minmax(0, 1.35fr)
+    minmax(280px, 0.75fr);
 
-.attendance-event:hover {
-    transform: translateX(3px);
-    border-color: #e2caca;
-    box-shadow: 0 7px 18px rgba(74, 0, 0, 0.06);
-}
+  gap: 20px;
 
-.attendance-event-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    margin-bottom: 10px;
-}
-
-.attendance-event-name {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    min-width: 0;
-    color: #351111;
-    font-size: 13px;
-    font-weight: 750;
-}
-
-.attendance-event-name svg {
-    flex-shrink: 0;
-    color: #800000;
-    font-size: 13px;
-}
-
-.attendance-event-name span {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.attendance-event-header strong {
-    flex-shrink: 0;
-    color: #650000;
-    font-size: 12px;
-    font-weight: 850;
+  padding: 20px;
 }
 
 
-/* Progress bar background */
+/*
+  Current event title.
+*/
+.current-event-details h4 {
+  margin: 0 0 16px;
 
+  color: #000000;
+
+  font-size: 1.35rem;
+}
+
+
+/*
+  Live event badge.
+*/
+.live-badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  background: #fcebed;
+
+  color: var(--dashboard-maroon);
+
+  font-size: 0.66rem;
+
+  font-weight: 700;
+}
+
+
+/*
+  Small dot inside live badge.
+*/
+.live-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: var(--dashboard-maroon);
+}
+
+
+/*
+  Event information layout.
+*/
+.event-meta-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 10px;
+
+  margin-bottom: 18px;
+}
+
+
+/*
+  Individual event information item.
+*/
+.event-meta-grid > div {
+  display: flex;
+
+  gap: 8px;
+
+  padding: 10px;
+
+  border-radius: 9px;
+
+  background: #f8f8f8;
+
+  color: #000000;
+
+  font-size: 0.7rem;
+}
+
+
+/*
+  Event information icons.
+*/
+.event-meta-grid svg {
+  color: var(--dashboard-maroon);
+}
+
+
+/* =========================================================
+   LIVE ATTENDANCE
+   ========================================================= */
+
+.live-attendance-box {
+  padding: 16px;
+
+  border-radius: 12px;
+
+  background: var(--dashboard-maroon-dark);
+
+  color: #ffffff;
+}
+
+
+.live-attendance-box > div:first-child {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-end;
+}
+
+
+/*
+  Attendance label.
+*/
+.live-attendance-box span {
+  font-size: 0.72rem;
+
+  opacity: 0.8;
+}
+
+
+/*
+  Attendance number.
+*/
+.live-attendance-box strong {
+  color: #ffffff;
+
+  font-size: 1.6rem;
+}
+
+
+/*
+  Small text beside attendance number.
+*/
+.live-attendance-box strong small {
+  color: #ffffff;
+
+  font-size: 0.8rem;
+
+  font-weight: 500;
+}
+
+
+/*
+  Attendance progress background.
+*/
 .attendance-progress {
-    width: 100%;
-    height: 9px;
-    overflow: hidden;
-    border-radius: 20px;
-    background: #eee4e4;
+  height: 7px;
+
+  margin-top: 12px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.15);
 }
 
-/* Actual attendance */
 
+/*
+  Attendance progress.
+*/
 .attendance-progress-fill {
-    height: 100%;
-    border-radius: inherit;
-    background: linear-gradient(
-        90deg,
-        #650000 0%,
-        #8b0000 65%,
-        #a52a2a 100%
-    );
-    box-shadow: 0 2px 7px rgba(128, 0, 0, 0.22);
-    transition: width 700ms ease;
-}
+  height: 100%;
 
+  border-radius: inherit;
 
-/* Bottom information */
-
-.attendance-event-footer {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 8px;
-    font-size: 10px;
-    color: #958686;
-}
-
-.attendance-event-footer span:first-child {
-    color: #800000;
-    font-weight: 800;
-}
-
-
-/* Empty chart */
-
-.empty-chart {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 250px;
-    padding: 30px;
-    text-align: center;
-    border: 1px dashed #dfcaca;
-    border-radius: 15px;
-    background: #fffafa;
-}
-
-.empty-chart svg {
-    margin-bottom: 12px;
-    font-size: 32px;
-    color: #a97878;
-}
-
-.empty-chart h4 {
-    margin: 0;
-    color: #4a2222;
-    font-size: 15px;
-}
-
-.empty-chart p {
-    margin: 6px 0 0;
-    color: #8c7b7b;
-    font-size: 12px;
+  background: #ffffff;
 }
 
 
 /* =========================================================
-   UPCOMING EVENTS
+   LATEST ATTENDEES
    ========================================================= */
 
-.events-list {
-    display: flex;
-    flex-direction: column;
-    gap: 11px;
-    margin-top: 18px;
+.latest-attendees {
+  margin-top: 20px;
 }
 
-.event-item {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    padding: 11px;
-    border-radius: 14px;
-    background: #fffafa;
-    border: 1px solid #f1e6e6;
-    transition:
-        transform 160ms ease,
-        box-shadow 160ms ease,
-        border-color 160ms ease;
+
+/*
+  Small subsection heading.
+*/
+.subsection-title {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 10px;
 }
 
-.event-item:hover {
-    transform: translateY(-2px);
-    border-color: #e3caca;
-    box-shadow: 0 7px 17px rgba(74, 0, 0, 0.065);
+
+/*
+  Subsection title.
+*/
+.subsection-title h5 {
+  margin: 0;
+
+  color: #000000;
+
+  font-size: 0.78rem;
 }
 
-.event-thumb {
-    width: 46px;
-    height: 46px;
-    flex-shrink: 0;
-    display: grid;
-    place-items: center;
-    border-radius: 12px;
-    background: #f9e5e5;
-    color: #800000;
-    font-size: 16px;
+
+/*
+  Attendee list.
+*/
+.latest-attendee-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
 }
 
-.event-body {
-    flex: 1;
-    min-width: 0;
+
+/*
+  Individual attendee row.
+*/
+.latest-attendee-row {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 9px 0;
+
+  border-bottom: 1px solid #e5e5e5;
 }
 
-.event-name {
-    font-weight: 750;
-    color: #351111;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 13px;
+
+/*
+  Attendee avatar.
+*/
+.attendee-avatar {
+  display: grid;
+
+  width: 32px;
+  height: 32px;
+
+  flex: 0 0 32px;
+
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: var(--dashboard-maroon);
+
+  color: #000000;
+
+  font-size: 0.7rem;
+
+  font-weight: 700;
 }
 
-.event-meta {
-    margin-top: 5px;
-    font-size: 11px;
-    color: #887979;
+
+/*
+  Attendee name/details container.
+*/
+.latest-attendee-row > div:nth-child(2) {
+  min-width: 0;
+
+  flex: 1;
 }
 
-.badge {
-    flex-shrink: 0;
-    padding: 6px 9px;
-    border-radius: 20px;
-    font-size: 10px;
-    font-weight: 800;
+
+/*
+  Attendee name and time.
+*/
+.latest-attendee-row strong,
+.latest-attendee-row span {
+  display: block;
 }
 
-.badge.active {
-    background: #f8e2e2;
-    color: #740000;
+
+/*
+  Attendee name.
+*/
+.latest-attendee-row strong {
+  overflow: hidden;
+
+  color: #000000;
+
+  font-size: 0.72rem;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
 }
 
-.badge.upcoming {
-    background: #fff4df;
-    color: #866000;
-}
 
-.empty-events {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 220px;
-    text-align: center;
-    color: #958585;
-}
+/*
+  Attendee secondary information.
+*/
+.latest-attendee-row span,
+.latest-attendee-row time {
+  color: #000000;
 
-.empty-events svg {
-    margin-bottom: 10px;
-    font-size: 28px;
-    color: #a97878;
-}
-
-.empty-events p {
-    margin: 0;
-    font-size: 12px;
+  font-size: 0.62rem;
 }
 
 
 /* =========================================================
-   RECENT ACTIVITIES
+   CERTIFICATE PREVIEW
    ========================================================= */
 
-.activities {
-    margin-top: 12px;
+.certificate-preview-box {
+  height: 390px;
+
+  overflow: hidden;
+
+  border: 1px solid var(--dashboard-border);
+
+  border-radius: 10px;
 }
 
-.activity-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 2px;
-    border-bottom: 1px dashed #eee3e3;
+
+/*
+  Certificate PDF iframe.
+*/
+.certificate-preview-box iframe {
+  width: 100%;
+  height: 100%;
+
+  border: 0;
 }
 
-.activity-row:last-child {
-    border-bottom: none;
+
+/*
+  Empty certificate/current event layout.
+*/
+.certificate-empty,
+.no-current-event {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  text-align: center;
 }
 
-.act-dot {
-    position: relative;
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: #800000;
-    flex-shrink: 0;
+
+/*
+  Empty certificate box.
+*/
+.certificate-empty {
+  min-height: 300px;
+
+  padding: 30px;
+
+  border: 1px dashed var(--dashboard-border);
+
+  border-radius: 10px;
+
+  background: #ffffff;
 }
 
-.act-dot::after {
-    content: "";
-    position: absolute;
-    inset: -4px;
-    border: 1px solid rgba(128, 0, 0, 0.18);
-    border-radius: 50%;
+
+/*
+  Empty certificate icon.
+*/
+.certificate-empty svg,
+.no-current-event-icon {
+  color: #ffffff;
 }
 
-.act-text {
-    flex: 1;
-    font-size: 13px;
-    color: #493737;
+
+/*
+  Empty certificate title.
+*/
+.certificate-empty strong {
+  margin-top: 8px;
+
+  color: #000000;
+
+  font-size: 0.8rem;
 }
 
-.act-time {
-    font-size: 11px;
-    color: #a09393;
-    white-space: nowrap;
+
+/*
+  Empty certificate description.
+*/
+.certificate-empty span,
+.no-current-event p {
+  max-width: 500px;
+
+  color: #000000;
+
+  font-size: 0.66rem;
+
+  line-height: 1.6;
+}
+
+
+/*
+  No current event container.
+*/
+.no-current-event {
+  padding: 48px 30px 52px;
+}
+
+
+/*
+  No current event icon.
+*/
+.no-current-event-icon {
+  display: grid;
+
+  width: 60px;
+  height: 60px;
+
+  margin-bottom: 15px;
+
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: var(--dashboard-maroon);
+
+  font-size: 1.3rem;
+}
+
+
+/*
+  No current event title.
+*/
+.no-current-event h4 {
+  margin: 0;
+
+  color: #000000;
+
+  font-size: 1rem;
+}
+
+
+/*
+  No current event description.
+*/
+.no-current-event p {
+  margin: 8px auto 0;
 }
 
 
 /* =========================================================
-   QUICK ACTIONS
+   TABLE
    ========================================================= */
 
-.quick-card {
-    background:
-        linear-gradient(
-            145deg,
-            #ffffff 0%,
-            #fffafa 65%,
-            #f9eeee 100%
-        );
+/*
+  Allows the table to scroll horizontally on smaller screens.
+*/
+.dashboard-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
 }
 
-.quick-subtitle {
-    margin: 6px 0 0;
-    color: #8a7979;
-    font-size: 11px;
+
+/*
+  Dashboard table.
+*/
+.dashboard-table {
+  width: 100%;
+
+  min-width: 650px;
+
+  border-collapse: collapse;
 }
 
-.quick-grid {
-    position: relative;
-    z-index: 1;
-    display: grid;
+
+/*
+  Table header.
+*/
+.dashboard-table th {
+  padding: 11px 16px;
+
+  border-bottom: 1px solid var(--dashboard-border);
+
+  background: #f8f8f8;
+
+  color: #000000;
+
+  font-size: 0.66rem;
+
+  text-align: left;
+}
+
+
+/*
+  Table cells.
+*/
+.dashboard-table td {
+  padding: 13px 16px;
+
+  border-bottom: 1px solid #e5e5e5;
+
+  color: #000000;
+
+  font-size: 0.7rem;
+}
+
+
+/*
+  Remove border from last table row.
+*/
+.dashboard-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+
+/*
+  Event name cells.
+*/
+.event-name-cell strong,
+.event-name-cell span {
+  display: block;
+}
+
+
+/*
+  Event name.
+*/
+.event-name-cell strong {
+  color: #000000;
+
+  font-size: 0.72rem;
+}
+
+
+/*
+  Event description.
+*/
+.event-name-cell span {
+  color: #000000;
+
+  font-size: 0.61rem;
+}
+
+
+/*
+  Muted table text.
+*/
+.table-muted {
+  color: #000000;
+
+  font-weight: 400;
+}
+
+
+/* =========================================================
+   STATUS BADGES
+   ========================================================= */
+
+.status-badge {
+  display: inline-flex;
+
+  padding: 4px 8px;
+
+  border-radius: 999px;
+
+  font-size: 0.6rem;
+
+  font-weight: 700;
+
+  text-transform: capitalize;
+}
+
+
+/*
+  Approved status.
+*/
+.status-approved {
+  background: #eaf5ea;
+
+  color: var(--dashboard-success);
+}
+
+
+/*
+  Pending status.
+*/
+.status-pending {
+  background: #fffaf8;
+
+  color: var(--dashboard-warning);
+}
+
+
+/*
+  Declined status.
+*/
+.status-declined {
+  background: #fcebed;
+
+  color: var(--dashboard-maroon);
+}
+
+
+/*
+  Empty table state.
+*/
+.empty-state {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 8px;
+
+  min-height: 110px;
+
+  color: #000000;
+
+  font-size: 0.72rem;
+}
+
+
+/* =========================================================
+   SIDE PANELS
+   ========================================================= */
+
+.side-panel .panel-heading {
+  padding: 16px 18px;
+}
+
+
+/*
+  Lists inside side panels.
+*/
+.pending-action-list,
+.quick-actions-list {
+  display: flex;
+
+  flex-direction: column;
+}
+
+
+/*
+  Pending actions and quick action buttons.
+*/
+.pending-action-item,
+.quick-action-button {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  width: 100%;
+
+  padding: 13px 16px;
+
+  border: 0;
+
+  border-bottom: 1px solid #e5e5e5;
+
+  background: transparent;
+
+  color: #000000;
+
+  font-family: inherit;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    padding-left 0.2s ease;
+}
+
+
+/*
+  Hover effect.
+*/
+.pending-action-item:hover,
+.quick-action-button:hover {
+  padding-left: 20px;
+
+  background: #fffaf8;
+}
+
+
+/*
+  Action icons.
+*/
+.pending-action-icon,
+.quick-action-button > span {
+  display: grid;
+
+  width: 34px;
+  height: 34px;
+
+  flex: 0 0 34px;
+
+  place-items: center;
+
+  border-radius: 9px;
+
+  background: var(--dashboard-maroon);
+
+  color: #ffffff;
+}
+
+
+/*
+  Action text container.
+*/
+.pending-action-copy,
+.quick-action-button > div {
+  min-width: 0;
+
+  flex: 1;
+}
+
+
+/*
+  Action titles and descriptions.
+*/
+.pending-action-copy strong,
+.pending-action-copy small,
+.quick-action-button strong,
+.quick-action-button small {
+  display: block;
+}
+
+
+/*
+  Action title.
+*/
+.pending-action-copy strong,
+.quick-action-button strong {
+  color: #000000;
+
+  font-size: 0.7rem;
+}
+
+
+/*
+  Action description.
+*/
+.pending-action-copy small,
+.quick-action-button small {
+  margin-top: 2px;
+
+  color: #000000;
+
+  font-size: 0.59rem;
+}
+
+
+/*
+  Arrow on the right side.
+*/
+.pending-action-arrow,
+.quick-action-arrow {
+  color: #777777;
+
+  font-size: 0.65rem;
+}
+
+
+/* =========================================================
+   ACTIVITY LIST
+   ========================================================= */
+
+.activity-list {
+  padding: 4px 16px 8px;
+}
+
+
+/*
+  Individual activity.
+*/
+.activity-item {
+  display: flex;
+
+  gap: 10px;
+
+  padding: 13px 0;
+
+  border-bottom: 1px solid #e5e5e5;
+}
+
+
+/*
+  Activity icon.
+*/
+.activity-icon {
+  display: grid;
+
+  width: 31px;
+  height: 31px;
+
+  flex: 0 0 31px;
+
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: var(--dashboard-maroon);
+
+  color: #ffffff;
+
+  font-size: 0.67rem;
+}
+
+
+/*
+  Activity text.
+*/
+.activity-copy {
+  min-width: 0;
+}
+
+
+/*
+  Activity title.
+*/
+.activity-copy strong {
+  display: block;
+
+  color: #000000;
+
+  font-size: 0.69rem;
+}
+
+
+/*
+  Activity description.
+*/
+.activity-copy p {
+  margin: 2px 0;
+
+  color: #000000;
+
+  font-size: 0.6rem;
+
+  line-height: 1.45;
+}
+
+
+/*
+  Activity time.
+*/
+.activity-copy time {
+  color: #555555;
+
+  font-size: 0.57rem;
+}
+
+
+/* =========================================================
+   QUICK ACTION PANEL
+   ========================================================= */
+
+.quick-actions-panel {
+  border-top: 1px solid var(--dashboard-border);
+}
+
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   Screens smaller than 1250px
+   --------------------------------------------------------- */
+
+@media (max-width: 1250px) {
+
+  /*
+    Make the side panel slightly smaller.
+  */
+  .event-dashboard-layout {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+
+
+  /*
+    Stack current event content.
+  */
+  .current-event-content {
+    grid-template-columns: 1fr;
+  }
+
+
+  /*
+    Make certificate preview slightly shorter.
+  */
+  .certificate-preview-box {
+    height: 340px;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   Screens smaller than 1050px
+   --------------------------------------------------------- */
+
+@media (max-width: 1050px) {
+
+  /*
+    Display summary cards in two columns.
+  */
+  .dashboard-summary {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-    margin-top: 17px;
+  }
+
+
+  /*
+    Stack the event dashboard.
+  */
+  .event-dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+
+
+  /*
+    Display side panels in two columns.
+  */
+  .event-side-column {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    align-items: start;
+  }
+
+
+  /*
+    Make quick actions span the full width.
+  */
+  .quick-actions-panel {
+    grid-column: 1 / -1;
+  }
 }
 
-.quick {
+
+/* ---------------------------------------------------------
+   Mobile screens
+   --------------------------------------------------------- */
+
+@media (max-width: 760px) {
+
+  /*
+    Reduce page spacing.
+  */
+  .dashboard-content {
+    padding: 20px 15px;
+  }
+
+
+  /*
+    Stack welcome section.
+  */
+  .dashboard-welcome {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    min-height: 330px;
+
+    padding: 28px 24px;
+
+  }
+
+
+  .dashboard-welcome::before {
+    inset: auto 0 0;
+
+    height: 58%;
+
+    background-position: center bottom;
+
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.35) 28%,
+      #000 62%,
+      #000 100%
+    );
+    mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.35) 28%,
+      #000 62%,
+      #000 100%
+    );
+  }
+
+
+  /*
+    Make the welcome heading smaller.
+  */
+  .dashboard-welcome h1 {
+    font-size: 2rem;
+  }
+
+
+  /*
+    Make date box full width.
+  */
+  .dashboard-date {
     position: relative;
-    min-height: 94px;
-    padding: 14px 10px;
-    border: 1px solid #eadada;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.9);
-    color: #493333;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    overflow: hidden;
-    transition:
-        transform 170ms ease,
-        box-shadow 170ms ease,
-        border-color 170ms ease,
-        background 170ms ease;
-}
+    top: auto;
+    right: auto;
 
-.quick::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
     width: 100%;
-    height: 3px;
-    background: #800000;
-    transform: scaleX(0);
-    transform-origin: center;
-    transition: transform 170ms ease;
-}
 
-.quick svg {
-    display: grid;
-    place-items: center;
-    width: 39px;
-    height: 39px;
-    padding: 10px;
-    border-radius: 11px;
-    background: #f8e4e4;
-    color: #800000;
-    font-size: 16px;
-    transition:
-        transform 170ms ease,
-        background 170ms ease;
-}
-
-.quick:hover {
-    transform: translateY(-4px);
-    border-color: #d9b6b6;
-    background: #ffffff;
-    box-shadow: 0 10px 23px rgba(74, 0, 0, 0.09);
-}
-
-.quick:hover::before {
-    transform: scaleX(1);
-}
-
-.quick:hover svg {
-    transform: scale(1.07);
-    background: #800000;
-    color: #ffffff;
-}
-
-
-/* =========================================================
-   ACCESS DENIED
-   ========================================================= */
-
-.access-denied {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    gap: 12px;
-    min-height: 430px;
-    padding: 40px;
-    text-align: center;
-    background: var(--color-surface);
-    border: 1px solid #eadada;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(74, 0, 0, 0.06);
-}
-
-.access-denied::before {
-    content: "!";
-    display: grid;
-    place-items: center;
-    width: 60px;
-    height: 60px;
-    margin-bottom: 5px;
-    border-radius: 50%;
-    background: #f9e5e5;
-    color: #800000;
-    font-size: 28px;
-    font-weight: 900;
-}
-
-.access-denied h2 {
-    margin: 0;
-    font-size: 30px;
-    color: #351111;
-    font-weight: 900;
-}
-
-.access-denied p {
-    margin: 0;
-    font-size: 14px;
-    color: #766666;
-    max-width: 430px;
-}
+  }
 
 
-/* =========================================================
-   RESPONSIVE — TABLET
-   ========================================================= */
-
-@media (max-width: 1200px) {
-
-    .dashboard-page {
-        padding: 24px;
-    }
-
-    .summary-row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .main-grid,
-    .lower-grid {
-        grid-template-columns: 1fr;
-    }
-
-}
+  /*
+    Stack cards into one column.
+  */
+  .dashboard-summary,
+  .registration-cards,
+  .event-side-column {
+    grid-template-columns: 1fr;
+  }
 
 
-/* =========================================================
-   RESPONSIVE — SMALL TABLET
-   ========================================================= */
-
-@media (max-width: 800px) {
-
-    .dashboard-welcome {
-        align-items: flex-start;
-    }
-
-    .dashboard-welcome h2 {
-        font-size: 25px;
-    }
-
-    .date-card {
-        min-width: 165px;
-    }
-
-    .chart-summary {
-        display: none;
-    }
-
-    .attendance-event-header {
-        align-items: flex-start;
-    }
-
-}
+  /*
+    Stack event information.
+  */
+  .event-meta-grid {
+    grid-template-columns: 1fr;
+  }
 
 
-/* =========================================================
-   RESPONSIVE — MOBILE
-   ========================================================= */
-
-@media (max-width: 700px) {
-
-    .dashboard-page {
-        padding: 20px 16px 28px;
-    }
-
-    .dashboard-welcome {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-
-    .dashboard-welcome h2 {
-        font-size: 23px;
-    }
-
-    .dashboard-welcome p {
-        font-size: 13px;
-    }
-
-    .date-card {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .summary-row {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-
-    .stat-card {
-        min-height: 100px;
-    }
-
-    .panel-card {
-        padding: 16px;
-        border-radius: 16px;
-    }
-
-    .card-head {
-        align-items: flex-start;
-    }
-
-    .card-head h3 {
-        font-size: 16px;
-    }
-
-    .chart-subtitle {
-        max-width: 240px;
-        line-height: 1.4;
-    }
-
-    .attendance-chart {
-        gap: 13px;
-    }
-
-    .attendance-event {
-        padding: 12px;
-    }
-
-    .event-item {
-        padding: 10px;
-    }
-
-    .event-thumb {
-        width: 42px;
-        height: 42px;
-    }
-
-    .badge {
-        display: none;
-    }
-
-    .quick-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-}
+  /*
+    Reduce event content padding.
+  */
+  .current-event-content {
+    padding: 16px;
+  }
 
 
-/* =========================================================
-   RESPONSIVE — SMALL MOBILE
-   ========================================================= */
+  /*
+    Keep table scrollable.
+  */
+  .dashboard-table {
+    min-width: 620px;
+  }
 
-@media (max-width: 450px) {
 
-    .dashboard-page {
-        padding: 17px 12px 24px;
-    }
-
-    .dashboard-welcome h2 {
-        font-size: 21px;
-    }
-
-    .dashboard-welcome p {
-        font-size: 12px;
-    }
-
-    .stat-card {
-        padding: 15px;
-    }
-
-    .stat-icon {
-        width: 53px;
-        height: 53px;
-        border-radius: 14px;
-    }
-
-    .stat-value {
-        font-size: 25px;
-    }
-
-    .stat-title {
-        font-size: 11px;
-    }
-
-    .stat-status {
-        font-size: 10px;
-    }
-
-    .card-head {
-        flex-direction: column;
-    }
-
-    .attendance-event-header {
-        flex-direction: column;
-        gap: 7px;
-    }
-
-    .attendance-event-header strong {
-        font-size: 11px;
-    }
-
-    .attendance-event-footer {
-        font-size: 9px;
-    }
-
-    .quick-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .quick {
-        min-height: 82px;
-    }
-
-    .activity-row {
-        gap: 9px;
-    }
-
-    .act-text {
-        font-size: 12px;
-    }
-
-    .act-time {
-        display: none;
-    }
-
+  /*
+    Reset quick actions column.
+  */
+  .quick-actions-panel {
+    grid-column: auto;
+  }
 }

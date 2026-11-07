@@ -76,33 +76,6 @@ function Certificate() {
     return (
         <div className="certificate-page">
 
-            {/* =================================================
-                PAGE HEADER
-            ================================================= */}
-
-            <div className="certificate-page-header">
-
-                <div>
-
-                    <div className="certificate-breadcrumb">
-                        Home
-                        <span>›</span>
-                        Certificate Management
-                    </div>
-
-                    <h1>
-                        Certificate Management
-                    </h1>
-
-                    <p>
-                        Preview certificate templates for approved events.
-                    </p>
-
-                </div>
-
-
-            </div>
-
 
             {/* =================================================
                 INFORMATION CARD

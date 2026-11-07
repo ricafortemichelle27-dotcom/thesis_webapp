@@ -1,0 +1,76 @@
+/* =========================================
+   HAMBURGER DROPDOWN
+   ========================================= */
+
+.hamburger-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+
+    width: 180px;
+
+    background: #ffffff;
+
+    border-radius: 6px;
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.18);
+
+    overflow: hidden;
+
+    z-index: 1000;
+
+    animation: dropdownAppear 0.15s ease-out;
+}
+
+/* Small opening animation */
+@keyframes dropdownAppear {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================
+   DROPDOWN OPTIONS
+   ========================================= */
+
+.hamburger-dropdown-item {
+    width: 100%;
+
+    padding: 13px 16px;
+
+    border: none;
+    border-bottom: 1px solid #eeeeee;
+
+    background: #ffffff;
+
+    color: #222222;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition: background-color 0.15s ease;
+}
+
+.hamburger-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.hamburger-dropdown-item:hover {
+    background: #f5f5f5;
+}
+
+.hamburger-dropdown-item:active {
+    background: #eeeeee;
+}

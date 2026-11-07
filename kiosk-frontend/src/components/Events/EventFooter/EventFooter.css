@@ -1,0 +1,243 @@
+
+/* =========================================
+   EVENT PAGE FOOTER
+
+   Temporary Event Theme:
+   Deep Navy + Gold/Orange
+
+   These colors can later be replaced
+   by the Event Admin's selected theme.
+========================================= */
+
+.event-footer {
+    position: fixed;
+
+    bottom: 0;
+    left: 0;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100vw, calc(100vh * 11.8 / 19.3));
+
+    height: var(--event-footer-height, 74px);
+
+    background: var(--event-primary);
+
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+
+    padding: 7px 15px 8px;
+
+    box-sizing: border-box;
+
+    z-index: 1000;
+
+    border-top: none;
+
+    border-radius: 34px 34px 0 0;
+
+    transition: transform 0.28s ease;
+}
+
+.event-footer.retracted {
+    transform: translate(-50%, 100%);
+}
+
+.event-footer-reveal,
+.event-footer-collapse {
+    position: fixed;
+    left: calc(50% + min(50vw, calc(50vh * 11.8 / 19.3)) - 48px);
+    width: 28px;
+    height: 16px;
+    padding: 0;
+    border: 0;
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--event-primary) 55%, transparent);
+    cursor: pointer;
+    z-index: 1001;
+    opacity: 0.55;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.event-footer-reveal {
+    bottom: 0;
+}
+
+.event-footer-collapse {
+    bottom: var(--event-footer-height, 74px);
+    transform: translateY(100%);
+}
+
+.event-footer-reveal:hover,
+.event-footer-collapse:hover {
+    opacity: 0.9;
+    background: var(--event-primary);
+}
+
+.footer-reveal-arrow,
+.footer-collapse-arrow {
+    width: 6px;
+    height: 6px;
+    border-right: 1.5px solid #ffffff;
+    border-bottom: 1.5px solid #ffffff;
+}
+
+.footer-reveal-arrow {
+    margin-top: 3px;
+    transform: rotate(225deg);
+}
+
+.footer-collapse-arrow {
+    margin-top: -3px;
+    transform: rotate(45deg);
+}
+
+
+/* =========================================
+   FOOTER BUTTON
+========================================= */
+
+.event-footer-button {
+    flex: 1;
+
+    max-width: 120px;
+
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 6px;
+
+    background: transparent;
+
+    border: none;
+
+    color: var(--event-text-on-primary, #ffffff);
+
+    cursor: pointer;
+
+    padding: 7px 8px;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+
+/* =========================================
+   ICON
+========================================= */
+
+.event-footer-icon {
+    font-size: 27px;
+
+    color: var(--event-text-on-primary, #ffffff);
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* =========================================
+   LABEL
+========================================= */
+
+.event-footer-label {
+    font-size: 15px;
+
+    font-weight: 600;
+
+    color: var(--event-text-on-primary, #ffffff);
+
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   HOVER
+========================================= */
+
+.event-footer-button:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.event-footer-button:hover .event-footer-icon {
+    color: var(--event-text-on-primary, #ffffff);
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   ACTIVE PAGE
+========================================= */
+
+.event-footer-button.active {
+    background: color-mix(in srgb, var(--event-accent) 28%, transparent);
+
+    color: var(--event-accent);
+}
+
+.event-footer-button.active .event-footer-icon {
+    color: var(--event-accent);
+}
+
+.event-footer-button.active .event-footer-label {
+    color: var(--event-accent);
+}
+
+
+/* =========================================
+   PRESS EFFECT
+========================================= */
+
+.event-footer-button:active {
+    transform: scale(0.96);
+}
+
+
+/* =========================================
+   REMOVE DEFAULT FOCUS OUTLINE
+========================================= */
+
+.event-footer-button:focus {
+    outline: none;
+}
+
+
+/* =========================================
+   TABLET / SMALLER SCREEN
+========================================= */
+
+@media (max-width: 800px) {
+
+    .event-footer {
+        height: var(--event-footer-height, 74px);
+
+        padding: 7px 15px 8px;
+    }
+
+    .event-footer-button {
+        padding: 7px 8px;
+
+        gap: 4px;
+    }
+
+    .event-footer-icon {
+        font-size: 24px;
+    }
+
+    .event-footer-label {
+        font-size: 13px;
+    }
+}
+

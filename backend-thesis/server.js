@@ -7,6 +7,8 @@ import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
 import eventRoutes from "./routes/eventRoutes.js";
+import kioskRoutes from "./routes/kioskRoutes.js";
+import kioskSyncRoutes from "./routes/kioskSyncRoutes.js";
 import certificateRoutes from "./routes/certificateRoutes.js";
 
 const envPath = fileURLToPath(new URL("./.env", import.meta.url));
@@ -38,6 +40,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/events", eventRoutes);
+app.use("/api/kiosk", kioskRoutes);
+app.use("/api/kiosk-sync", kioskSyncRoutes);
 app.use("/api/certificates", certificateRoutes);
 app.use("/uploads", express.static("uploads"));
 

@@ -1,7 +1,7 @@
 import {
-    faChartPie,
+    faGaugeHigh,
     faCertificates,
-    faClipboardCheck,
+    faUserCheck,
     faGear,
     faUsers,
     faCalendarDays
@@ -10,7 +10,7 @@ import {
 export const navigationData = [
     {
         path: "/dashboard",
-        iconName: faChartPie,
+        iconName: faGaugeHigh,
         label: "DASHBOARD",
         roles: ["all"]
     },
@@ -34,7 +34,7 @@ export const navigationData = [
     },
     {
         path: "/attendance-reports",
-        iconName: faClipboardCheck,
+        iconName: faUserCheck,
         label: "ATTENDANCE REPORTS",
         roles: ["all"]
     },

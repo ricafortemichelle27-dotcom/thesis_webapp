@@ -1,0 +1,12 @@
+.main-layout {
+	width: min(100vw, calc(100vh * 11.8 / 19.3));
+	height: min(100vh, calc(100vw * 19.3 / 11.8));
+	min-height: 0;
+	aspect-ratio: 11.8 / 19.3;
+	margin: 0 auto;
+	overflow: hidden;
+	background: #dce2e5 url('../../assets/images/school_img.png') center center / cover no-repeat;
+	background-attachment: scroll;
+}
+
+.page-content { min-height: 100%; }

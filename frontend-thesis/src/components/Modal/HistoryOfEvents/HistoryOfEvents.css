@@ -1,0 +1,430 @@
+/* =========================================================
+   HISTORY MODAL
+   Reuses the --event-maroon / --event-gold theme variables
+   declared in Events.css (:root). No redeclaration needed
+   as long as Events.css is loaded on the page.
+========================================================= */
+
+.history-backdrop {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    background: rgba(40, 22, 27, 0.45);
+    backdrop-filter: blur(2px);
+
+    z-index: 2000;
+}
+
+.history-modal {
+    width: min(100%, 920px);
+    max-height: 85vh;
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--event-surface, #ffffff);
+
+    border: 1px solid var(--event-border, #eadfe1);
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 20px 48px rgba(76, 24, 37, 0.22);
+
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.history-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    padding: 22px 24px;
+
+    background:
+        linear-gradient(
+            120deg,
+            var(--event-maroon, #7a0019) 0%,
+            var(--event-maroon-light, #8f1735) 100%
+        );
+
+    color: #ffffff;
+}
+
+.history-header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.history-header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 44px;
+    height: 44px;
+
+    flex-shrink: 0;
+
+    border-radius: 12px;
+
+    background: var(--event-gold, #f4c430);
+    color: var(--event-maroon-dark, #650014);
+
+    font-size: 18px;
+
+    box-shadow:
+        0 6px 16px rgba(244, 196, 48, 0.35);
+}
+
+.history-header h3 {
+    margin: 0 0 3px;
+
+    font-size: 19px;
+    font-weight: 800;
+
+    color: #ffffff;
+}
+
+.history-header p {
+    margin: 0;
+
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.history-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 32px;
+    height: 32px;
+
+    flex-shrink: 0;
+
+    border: none;
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+
+    font-size: 20px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition: background 0.2s ease;
+}
+
+.history-close-btn:hover {
+    background: rgba(255, 255, 255, 0.28);
+}
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.history-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    padding: 16px 24px;
+
+    border-bottom: 1px solid #eee4e6;
+    background: #fffaf9;
+}
+
+.history-search {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    max-width: 320px;
+
+    border: 1px solid #e5d9dc;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    padding: 0 13px;
+
+    color: var(--event-maroon, #7a0019);
+}
+
+.history-search svg {
+    flex-shrink: 0;
+    margin-right: 8px;
+    font-size: 13px;
+    color: #000000;
+}
+
+.history-search input {
+    width: 100%;
+    height: 38px;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #39282d;
+    font-size: 13px;
+}
+
+.history-search input::placeholder {
+    color: #a6979b;
+}
+
+.history-count-pill {
+    flex-shrink: 0;
+
+    padding: 6px 13px;
+
+    border-radius: 20px;
+
+    background: var(--event-gold-soft, #fff7d6);
+    color: var(--event-gold-dark, #d9a900);
+
+    font-size: 11.5px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.history-table-wrapper {
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 760px;
+}
+
+.history-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+    background: #fbf0f3;
+}
+
+.history-table th {
+    padding: 13px 16px;
+
+    text-align: left;
+
+    color: var(--event-maroon, #7a0019);
+
+    font-size: 11.5px;
+    font-weight: 750;
+
+    white-space: nowrap;
+}
+
+.history-table td {
+    padding: 15px 16px;
+
+    border-top: 1px solid #f0e8e9;
+
+    vertical-align: middle;
+
+    color: #59494e;
+
+    font-size: 12.5px;
+}
+
+.history-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.history-table tbody tr:hover {
+    background: #fff8f9;
+}
+
+/* Event cell */
+
+.history-event-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    min-width: 190px;
+}
+
+.history-event-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 36px;
+
+    flex-shrink: 0;
+
+    border-radius: 9px;
+
+    background: var(--event-gold-soft, #fff7d6);
+    color: var(--event-gold-dark, #d9a900);
+
+    font-size: 14px;
+}
+
+.history-event-cell > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.history-event-cell strong {
+    color: #3f2930;
+    font-size: 13px;
+}
+
+.history-event-cell span {
+    color: #99868b;
+    font-size: 10px;
+}
+
+/* Admin cell */
+
+.history-admin-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: #55444a;
+    font-weight: 600;
+}
+
+.history-admin-cell svg {
+    color: #000000;
+    font-size: 12px;
+}
+
+/* Location cell */
+
+.history-location-cell {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.history-location-cell svg {
+    color: var(--event-maroon, #7a0019);
+    font-size: 11px;
+}
+
+/* Status badge — gold, since this is a "completed" state
+   distinct from the live "approved" badge on the main table */
+
+.history-status-badge {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 4px 10px;
+
+    border-radius: 20px;
+
+    background: var(--event-gold-soft, #fff7d6);
+    color: var(--event-gold-dark, #d9a900);
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.history-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 60px 24px;
+    text-align: center;
+}
+
+.history-empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 50px;
+    height: 50px;
+
+    margin-bottom: 13px;
+
+    border-radius: 12px;
+
+    background: var(--event-maroon-soft, #f7e7eb);
+    color: var(--event-maroon, #7a0019);
+
+    font-size: 19px;
+}
+
+.history-empty-state h4 {
+    margin: 0 0 6px;
+
+    color: var(--event-maroon, #7a0019);
+    font-size: 15px;
+}
+
+.history-empty-state p {
+    margin: 0;
+
+    color: #8b7b80;
+    font-size: 12px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 700px) {
+    .history-modal {
+        max-height: 90vh;
+    }
+
+    .history-header {
+        padding: 18px;
+    }
+
+    .history-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 14px 18px;
+    }
+
+    .history-search {
+        max-width: none;
+    }
+
+    .history-count-pill {
+        align-self: flex-start;
+    }
+}

@@ -1,4 +1,11 @@
 import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCircleCheck,
+  faCircleExclamation,
+  faLightbulb,
+  faShieldHalved,
+} from "../../utils/icons.js";
 import { getCurrentUser, setCookie } from "../../utils/cookiesUtils.js";
 import { apiUrl } from "../../utils/api.js";
 import "./SystemSettings.css";
@@ -339,19 +346,19 @@ function SystemSettings() {
                 <div className="password-requirements">
 
                   <span>
-                    ✓ At least 8 characters
+                    <FontAwesomeIcon icon={faCircleCheck} /> At least 8 characters
                   </span>
 
                   <span>
-                    ✓ One uppercase letter
+                    <FontAwesomeIcon icon={faCircleCheck} /> One uppercase letter
                   </span>
 
                   <span>
-                    ✓ One number
+                    <FontAwesomeIcon icon={faCircleCheck} /> One number
                   </span>
 
                   <span>
-                    ✓ One special character
+                    <FontAwesomeIcon icon={faCircleCheck} /> One special character
                   </span>
 
                 </div>
@@ -405,8 +412,8 @@ function SystemSettings() {
                 >
                   <span>
                     {message.type === "success"
-                      ? "✓"
-                      : "!"}
+                      ? <FontAwesomeIcon icon={faCircleCheck} />
+                      : <FontAwesomeIcon icon={faCircleExclamation} />}
                   </span>
 
                   {message.text}
@@ -433,7 +440,7 @@ function SystemSettings() {
             <div className="card-heading">
 
               <div className="card-icon">
-                🛡
+                <FontAwesomeIcon icon={faShieldHalved} />
               </div>
 
               <div>
@@ -576,7 +583,7 @@ function SystemSettings() {
           <div className="security-summary">
 
             <div className="shield">
-              🛡
+              <FontAwesomeIcon icon={faShieldHalved} />
             </div>
 
             <h3>
@@ -611,7 +618,7 @@ function SystemSettings() {
           <div className="tips-card">
 
             <div className="tips-title">
-              <span>✦</span>
+              <FontAwesomeIcon icon={faLightbulb} />
               Security Tips
             </div>
 

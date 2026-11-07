@@ -1,8 +1,8 @@
-﻿import { useEffect, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import {
     faXmark,
     faCalendarDays,
-    faClock,
+    faLocationDot,
     faFilePdf,
     faCertificate,
     faCloudArrowUp,
@@ -26,20 +26,17 @@ const yearLevelOptions = [
     "4th Year",
 ];
 
-const hours = [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "10",
-    "11",
-    "12",
-];
+const toTimeInput = (hour, minute, period) => {
+    if (!hour || !period) return '';
+    return String(Number(hour) % 12 + (period === 'PM' ? 12 : 0)).padStart(2, '0') + ':' + minute;
+};
+
+const updateTimeInput = (value, setHour, setMinute, setPeriod) => {
+    const [hour, minute] = value.split(':');
+    setHour(value ? String(Number(hour) % 12 || 12) : '');
+    setMinute(minute || '00');
+    setPeriod(value ? (Number(hour) >= 12 ? 'PM' : 'AM') : '');
+};
 
 const getDropdownText = (items, placeholder, allLabel) => {
     if (!items.length) {
@@ -58,6 +55,8 @@ const getDropdownText = (items, placeholder, allLabel) => {
 };
 
 function AddEvent({ isOpen, onClose, onCreate, existingEvent }) {
+    const submitting = useRef(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [eventName, setEventName] = useState("");
     const [department, setDepartment] = useState("");
     const [majorPrograms, setMajorPrograms] = useState([]);
@@ -67,6 +66,7 @@ function AddEvent({ isOpen, onClose, onCreate, existingEvent }) {
     const [openDropdown, setOpenDropdown] = useState(null);
 
     const [eventDate, setEventDate] = useState("");
+    const [location, setLocation] = useState("");
     const [startsHour, setStartsHour] = useState("");
     const [startsMinute, setStartsMinute] = useState("00");
     const [startsPeriod, setStartsPeriod] = useState("");
@@ -111,6 +111,7 @@ function AddEvent({ isOpen, onClose, onCreate, existingEvent }) {
 
             setEventName(existingEvent.name || "");
             setEventDate(existingEvent.eventDate || existingEvent.date || "");
+            setLocation(existingEvent.location || existingEvent.event_location || "");
             setStartsHour(starts.hour);
             setStartsMinute(starts.minute);
             setStartsPeriod(starts.period);
@@ -146,9 +147,13 @@ function AddEvent({ isOpen, onClose, onCreate, existingEvent }) {
     }
 
     const majorProgramOptions =
-        department && department !== allDepartmentsLabel
-            ? getPrograms(department).map((item) => item.name)
-            : [];
+        department === allDepartmentsLabel
+            ? [...new Set(departmentOptions.flatMap((item) =>
+                getPrograms(item).map((program) => program.name)
+            ))]
+            : department
+                ? getPrograms(department).map((item) => item.name)
+                : [];
 
     const resetForm = () => {
         setDepartment("");
@@ -159,6 +164,7 @@ function AddEvent({ isOpen, onClose, onCreate, existingEvent }) {
 
         setEventName("");
         setEventDate("");
+        setLocation("");
         setStartsHour("");
         setStartsMinute("00");
         setStartsPeriod("");
@@ -186,59 +192,33 @@ function AddEvent({ isOpen, onClose, onCreate, existingEvent }) {
     };
 
     const handleMajorProgramChange = (option) => {
-        if (option === "General Engineering") {
-            if (majorPrograms.includes(option)) {
-                setMajorPrograms([]);
-                setYearLevels([]);
-            } else {
-                setMajorPrograms([option]);
-                setYearLevels(["1st Year"]);
+        setError('');
+        const wasGeneralOnly = majorPrograms.length === 1 && majorPrograms[0] === 'General Engineering';
+        let nextPrograms;
+
+        if (option === allMajorProgramsLabel) {
+            nextPrograms = majorPrograms.includes(allMajorProgramsLabel) ? [] : [allMajorProgramsLabel];
+        } else {
+            const selected = majorPrograms.includes(allMajorProgramsLabel) ? [] : majorPrograms;
+            nextPrograms = selected.includes(option)
+                ? selected.filter((program) => program !== option)
+                : [...selected, option];
+            if (majorProgramOptions.length > 1 && nextPrograms.length === majorProgramOptions.length) {
+                nextPrograms = [allMajorProgramsLabel];
             }
-            return;
         }
 
-        if (majorPrograms.includes("General Engineering")) {
-            setMajorPrograms([option]);
+        setMajorPrograms(nextPrograms);
+        if (nextPrograms.length === 1 && nextPrograms[0] === 'General Engineering') {
+            setYearLevels(['1st Year']);
+        } else if (wasGeneralOnly || nextPrograms.length === 0) {
+            // Clear the automatic year when expanding to multiple programs.
             setYearLevels([]);
-            return;
         }
-
-        toggleMajorProgram(option);
     };
 
     const toggleDropdown = (dropdownName) => {
         setOpenDropdown((prev) => (prev === dropdownName ? null : dropdownName));
-    };
-
-    const toggleMajorProgram = (option) => {
-        setError("");
-
-        if (option === allMajorProgramsLabel) {
-            setMajorPrograms((prevMajorPrograms) =>
-                prevMajorPrograms.includes(allMajorProgramsLabel)
-                    ? []
-                    : [allMajorProgramsLabel]
-            );
-            return;
-        }
-
-        setMajorPrograms((prevMajorPrograms) => {
-            let nextMajorPrograms = prevMajorPrograms.includes(allMajorProgramsLabel)
-                ? []
-                : [...prevMajorPrograms];
-
-            if (nextMajorPrograms.includes(option)) {
-                nextMajorPrograms = nextMajorPrograms.filter((item) => item !== option);
-            } else {
-                nextMajorPrograms.push(option);
-            }
-
-            if (majorProgramOptions.length > 1 && nextMajorPrograms.length === majorProgramOptions.length) {
-                return [allMajorProgramsLabel];
-            }
-
-            return nextMajorPrograms;
-        });
     };
 
     const toggleYearLevel = (option) => {
@@ -360,12 +340,14 @@ function AddEvent({ isOpen, onClose, onCreate, existingEvent }) {
     };
 
     const handleClose = () => {
+        if (submitting.current) return;
         resetForm();
         onClose();
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (submitting.current) return;
 
         if (eligibleParticipants.length === 0) {
             setError("Please add at least one eligible participant group.");
@@ -375,6 +357,7 @@ function AddEvent({ isOpen, onClose, onCreate, existingEvent }) {
         if (
             !eventName.trim() ||
             !eventDate ||
+            !location.trim() ||
             !startsHour ||
             !startsPeriod ||
             !endsHour ||
@@ -390,6 +373,7 @@ function AddEvent({ isOpen, onClose, onCreate, existingEvent }) {
             eventName: eventName.trim(),
             eligibleParticipants: eligibleParticipants,
             date: eventDate,
+            location: location.trim(),
             time: {
                 starts: {
                     hour: startsHour,
@@ -407,6 +391,10 @@ function AddEvent({ isOpen, onClose, onCreate, existingEvent }) {
         };
 
         try {
+            submitting.current = true;
+            setIsSubmitting(true);
+            setError("");
+            if (!onCreate) throw new Error("Event saving is unavailable.");
             if (onCreate) {
                 await onCreate(eventData, existingEvent);
             }
@@ -418,6 +406,9 @@ function AddEvent({ isOpen, onClose, onCreate, existingEvent }) {
                 submissionError?.message ||
                     "Failed to create event. Please try again."
             );
+        } finally {
+            submitting.current = false;
+            setIsSubmitting(false);
         }
     };
 
@@ -566,9 +557,7 @@ function AddEvent({ isOpen, onClose, onCreate, existingEvent }) {
                                 selected: majorPrograms,
                                 onToggle: handleMajorProgramChange,
                                 placeholder: "Select Major/Program",
-                                disabled:
-                                    !department ||
-                                    department === allDepartmentsLabel,
+                                disabled: !department,
                                 required: true,
                                 allOptionLabel: allMajorProgramsLabel,
                             })}
@@ -588,10 +577,9 @@ function AddEvent({ isOpen, onClose, onCreate, existingEvent }) {
                                             type="button"
                                             className="checkbox-dropdown-trigger"
                                             onClick={() =>
-                                                department !== allDepartmentsLabel &&
                                                 toggleDropdown("yearLevel")
                                             }
-                                            disabled={!department || department === allDepartmentsLabel}
+                                            disabled={!department}
                                         >
                                             <span className="checkbox-dropdown-text">
                                                 {getDropdownText(
@@ -715,113 +703,38 @@ function AddEvent({ isOpen, onClose, onCreate, existingEvent }) {
                                     Event Time <span>*</span>
                                 </label>
 
-                                <div className="event-time-rows">
-                                    <div className="event-time-row">
-                                        <strong>Starts</strong>
-
-                                        <div className="time-selector">
-                                            <div className="time-input-wrapper">
-                                                <FontAwesomeIcon icon={faClock} />
-
-                                                <select
-                                                    value={startsHour}
-                                                    onChange={(e) =>
-                                                        setStartsHour(e.target.value)
-                                                    }
-                                                >
-                                                    <option value="" disabled>
-                                                        Hour
-                                                    </option>
-                                                    {hours.map((hour) => (
-                                                        <option key={hour} value={hour}>
-                                                            {hour}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </div>
-
-                                            <select
-                                                className="minute-select"
-                                                value={startsMinute}
-                                                onChange={(e) =>
-                                                    setStartsMinute(e.target.value)
-                                                }
-                                            >
-                                                <option value="00">00</option>
-                                                <option value="15">15</option>
-                                                <option value="30">30</option>
-                                                <option value="45">45</option>
-                                            </select>
-
-                                            <select
-                                                className="period-select"
-                                                value={startsPeriod}
-                                                onChange={(e) =>
-                                                    setStartsPeriod(e.target.value)
-                                                }
-                                            >
-                                                <option value="" disabled>
-                                                    AM / PM
-                                                </option>
-                                                <option value="AM">AM</option>
-                                                <option value="PM">PM</option>
-                                            </select>
-                                        </div>
+                                <div className="event-native-time-grid">
+                                    <div className="event-native-time-field">
+                                        <label className="event-time-input-label" htmlFor="event-start-time">Start of the Event</label>
+                                        <input id="event-start-time" type="time" required
+                                            value={toTimeInput(startsHour, startsMinute, startsPeriod)}
+                                            onChange={(e) => updateTimeInput(e.target.value, setStartsHour, setStartsMinute, setStartsPeriod)} />
                                     </div>
-
-                                    <div className="event-time-row">
-                                        <strong>Ends</strong>
-
-                                        <div className="time-selector">
-                                            <div className="time-input-wrapper">
-                                                <FontAwesomeIcon icon={faClock} />
-
-                                                <select
-                                                    value={endsHour}
-                                                    onChange={(e) =>
-                                                        setEndsHour(e.target.value)
-                                                    }
-                                                >
-                                                    <option value="" disabled>
-                                                        Hour
-                                                    </option>
-                                                    {hours.map((hour) => (
-                                                        <option key={hour} value={hour}>
-                                                            {hour}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </div>
-
-                                            <select
-                                                className="minute-select"
-                                                value={endsMinute}
-                                                onChange={(e) =>
-                                                    setEndsMinute(e.target.value)
-                                                }
-                                            >
-                                                <option value="00">00</option>
-                                                <option value="15">15</option>
-                                                <option value="30">30</option>
-                                                <option value="45">45</option>
-                                            </select>
-
-                                            <select
-                                                className="period-select"
-                                                value={endsPeriod}
-                                                onChange={(e) =>
-                                                    setEndsPeriod(e.target.value)
-                                                }
-                                            >
-                                                <option value="" disabled>
-                                                    AM / PM
-                                                </option>
-                                                <option value="AM">AM</option>
-                                                <option value="PM">PM</option>
-                                            </select>
-                                        </div>
+                                    <div className="event-native-time-field">
+                                        <label className="event-time-input-label" htmlFor="event-end-time">End of the Event</label>
+                                        <input id="event-end-time" type="time" required
+                                            value={toTimeInput(endsHour, endsMinute, endsPeriod)}
+                                            onChange={(e) => updateTimeInput(e.target.value, setEndsHour, setEndsMinute, setEndsPeriod)} />
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div className="form-group event-location-group">
+                            <label htmlFor="eventLocation">
+                                Location <span>*</span>
+                            </label>
+
+                            <div className="input-with-icon">
+                                <FontAwesomeIcon icon={faLocationDot} />
+
+                                <input
+                                    id="eventLocation"
+                                    type="text"
+                                    placeholder="Enter event location"
+                                    value={location}
+                                    onChange={(e) => setLocation(e.target.value)}
+                                />
                             </div>
                         </div>
                     </div>
@@ -913,8 +826,8 @@ function AddEvent({ isOpen, onClose, onCreate, existingEvent }) {
                             Cancel
                         </button>
 
-                        <button type="submit" className="submit-event-btn">
-                            Create Event
+                        <button type="submit" className="submit-event-btn" disabled={isSubmitting} aria-busy={isSubmitting}>
+                            {isSubmitting ? "Saving Event..." : existingEvent ? "Save Event" : "Create Event"}
                         </button>
                     </div>
                 </form>

@@ -1,0 +1,618 @@
+/* =========================================================
+   ATTENDANCE KIOSK
+   EVENT-THEMED VERSION
+
+   This screen is designed to live INSIDE the EventLayout.
+
+   It inherits the event theme from the parent event page
+   instead of creating a separate WIS-only background.
+
+   The existing event CSS variables are reused whenever
+   they are available.
+========================================================= */
+
+.kiosk-screen {
+    --k-primary: var(--event-primary, #7a0019);
+    --k-secondary: var(--event-secondary, #650014);
+    --k-accent: var(--event-accent, #f4c430);
+    --k-primary-soft: color-mix(in srgb, var(--k-primary) 10%, transparent);
+    --k-accent-soft: color-mix(in srgb, var(--k-accent) 14%, transparent);
+    --k-border: color-mix(in srgb, var(--k-primary) 16%, transparent);
+    --k-surface: rgba(255, 255, 255, 0.92);
+
+    width: 100%;
+    min-height: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    /*
+        IMPORTANT:
+
+        Do not create another background here.
+
+        The EventLayout should be responsible for the
+        event background/theme.
+
+        This allows the Attendance page to display
+        the same WIS or Custom event background.
+    */
+    background: transparent;
+
+    font-family: "Poppins", "Segoe UI", sans-serif;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   ATTENDANCE CONTENT
+========================================================= */
+
+.attendance-kiosk-content {
+    width: 100%;
+    max-width: 850px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 24px;
+
+    padding: 34px 28px 110px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.attendance-kiosk-header {
+    width: 100%;
+    max-width: 760px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+
+    padding: 28px 30px;
+
+    box-sizing: border-box;
+
+    /*
+        Instead of forcing a WIS maroon gradient,
+        use the event theme surface.
+
+        This allows the Attendance page to visually
+        belong to the current event.
+    */
+    background: var(--k-surface);
+
+    border: 1px solid var(--k-border);
+
+    border-radius: 22px;
+
+    color: var(--event-text, var(--k-primary));
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.08);
+
+    backdrop-filter: blur(8px);
+}
+
+
+/* =========================================================
+   FINGERPRINT HEADER ICON
+========================================================= */
+
+.attendance-kiosk-header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 62px;
+    height: 62px;
+
+    margin-bottom: 16px;
+
+    border-radius: 16px;
+
+    background: var(--k-accent);
+
+    color: var(--k-secondary);
+
+    font-size: 26px;
+
+    box-shadow:
+        0 8px 20px rgba(244, 196, 48, 0.25);
+}
+
+
+/* =========================================================
+   HEADER TITLE
+========================================================= */
+
+.attendance-kiosk-header h1 {
+    margin: 0 0 10px;
+
+    max-width: 620px;
+
+    font-size: 23px;
+    font-weight: 800;
+
+    line-height: 1.4;
+
+    color: var(--event-text, var(--k-primary));
+}
+
+.attendance-kiosk-header h1 span {
+    color: var(--k-primary);
+}
+
+
+/* =========================================================
+   HEADER DESCRIPTION
+========================================================= */
+
+.attendance-kiosk-header p {
+    margin: 0;
+
+    max-width: 520px;
+
+    font-size: 13.5px;
+
+    line-height: 1.6;
+
+    color: color-mix(in srgb, var(--k-primary) 62%, white);
+}
+
+
+/* =========================================================
+   EVENT INFORMATION
+========================================================= */
+
+.kiosk-event-meta {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+.kiosk-event-meta span {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 7px 14px;
+
+    border-radius: 20px;
+
+    background: var(--k-primary-soft);
+
+    border: 1px solid var(--k-border);
+
+    font-size: 12px;
+    font-weight: 600;
+
+    color: var(--event-text, var(--k-primary));
+}
+
+.kiosk-event-meta svg {
+    color: var(--k-primary);
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   SCAN PANEL
+========================================================= */
+
+.kiosk-panel {
+    width: 100%;
+    max-width: 520px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 190px;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+
+    background: var(--k-surface);
+
+    border: 1px solid var(--k-border);
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.07);
+
+    backdrop-filter: blur(8px);
+}
+
+
+/* =========================================================
+   SCAN CONTENT
+========================================================= */
+
+.kiosk-idle,
+.kiosk-scanning,
+.kiosk-result {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 14px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   SCAN DESCRIPTION
+========================================================= */
+
+.kiosk-idle p,
+.kiosk-scanning p {
+    margin: 0;
+
+    color: color-mix(in srgb, var(--k-primary) 62%, white);
+
+    font-size: 13.5px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   FINGERPRINT SCAN ICON
+========================================================= */
+
+.kiosk-scan-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 76px;
+    height: 76px;
+
+    border-radius: 50%;
+
+    background: var(--k-primary-soft);
+
+    color: var(--k-primary);
+
+    font-size: 30px;
+}
+
+.kiosk-scan-icon.scanning {
+    color: var(--k-secondary);
+
+    background: var(--k-accent-soft);
+
+    animation: kiosk-pulse 1.1s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   SCANNING ANIMATION
+========================================================= */
+
+@keyframes kiosk-pulse {
+    0% {
+        box-shadow:
+            0 0 0 0 color-mix(in srgb, var(--k-accent) 45%, transparent);
+    }
+
+    70% {
+        box-shadow:
+            0 0 0 18px color-mix(in srgb, var(--k-accent) 0%, transparent);
+    }
+
+    100% {
+        box-shadow:
+            0 0 0 0 color-mix(in srgb, var(--k-accent) 0%, transparent);
+    }
+}
+
+
+/* =========================================================
+   RESULT
+========================================================= */
+
+.kiosk-result svg {
+    font-size: 34px;
+}
+
+.kiosk-result p {
+    margin: 0;
+
+    font-size: 14.5px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   SUCCESS
+========================================================= */
+
+.kiosk-result-success svg {
+    color: #2d7b4f;
+}
+
+.kiosk-result-success p {
+    color: #2d7b4f;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.kiosk-result-error svg {
+    color: var(--k-primary);
+}
+
+.kiosk-result-error p {
+    color: var(--k-primary);
+}
+
+
+/* =========================================================
+   ACTIONS — LOG IN / LOG OUT
+========================================================= */
+
+.kiosk-actions {
+    display: flex;
+
+    flex-wrap: nowrap;
+
+    gap: 18px;
+
+    width: 100%;
+    max-width: 520px;
+}
+
+.scan-here-prompt {
+    /* Align with the kiosk's right edge, even on a wide desktop preview. */
+    position: fixed;
+    right: max(0px, calc((100vw - min(100vw, calc(100vh * 11.8 / 19.3))) / 2));
+    bottom: var(--event-footer-visible-height, 0px);
+    z-index: 900;
+    width: clamp(168px, 25vh, 204px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 42px;
+    grid-template-rows: auto auto 25px;
+    align-items: center;
+    gap: 4px 10px;
+    padding: 16px 16px 10px;
+    border-top: 3px solid var(--k-accent);
+    border-radius: 20px 0 0 0;
+    background: var(--k-primary);
+    color: var(--event-text-on-primary, #ffffff);
+    box-shadow: -5px -6px 24px color-mix(in srgb, var(--k-primary) 18%, transparent);
+    transition: bottom 0.28s ease;
+    pointer-events: none;
+}
+
+.scan-here-label {
+    grid-column: 1;
+    grid-row: 1;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+}
+
+.scan-here-caption {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: 10px;
+    line-height: 1.4;
+    opacity: 0.85;
+}
+
+.scan-here-arrow {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    justify-self: center;
+    position: relative;
+    width: 20px;
+    height: 25px;
+    color: var(--k-accent);
+}
+
+.scan-here-arrow::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 9px;
+    width: 3px;
+    height: 18px;
+    border-radius: 2px;
+    background: currentColor;
+}
+
+.scan-here-arrow::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 5px;
+    width: 9px;
+    height: 9px;
+    border-right: 3px solid currentColor;
+    border-bottom: 3px solid currentColor;
+    transform: rotate(45deg);
+}
+
+.scan-here-icon {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    border: 1px solid color-mix(in srgb, var(--k-accent) 45%, transparent);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--k-accent) 14%, var(--k-primary));
+    color: var(--k-accent);
+    font-size: 24px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .scan-here-prompt { transition: none; }
+}
+
+
+/* =========================================================
+   BUTTON BASE
+========================================================= */
+
+.kiosk-btn {
+    flex: 1;
+
+    min-width: 180px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    padding: 18px 22px;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.kiosk-btn svg {
+    font-size: 18px;
+}
+
+.kiosk-btn:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   LOG IN
+========================================================= */
+
+.kiosk-btn-login {
+    background: var(--k-primary);
+
+    color: #ffffff;
+
+    box-shadow:
+        0 10px 24px color-mix(in srgb, var(--k-primary) 24%, transparent);
+}
+
+.kiosk-btn-login:hover:not(:disabled) {
+    background: var(--k-secondary);
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 30px color-mix(in srgb, var(--k-primary) 30%, transparent);
+}
+
+
+/* =========================================================
+   LOG OUT
+========================================================= */
+
+.kiosk-btn-logout {
+    background: var(--k-accent);
+
+    color: var(--k-secondary);
+
+    box-shadow:
+        0 10px 24px color-mix(in srgb, var(--k-accent) 24%, transparent);
+}
+
+.kiosk-btn-logout:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--k-accent) 82%, black);
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 30px color-mix(in srgb, var(--k-accent) 30%, transparent);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .attendance-kiosk-content {
+        padding: 28px 18px 100px;
+
+        gap: 20px;
+    }
+
+    .attendance-kiosk-header {
+        padding: 26px 20px;
+
+        border-radius: 18px;
+    }
+
+    .attendance-kiosk-header h1 {
+        font-size: 19px;
+    }
+
+    .kiosk-panel {
+        padding: 24px;
+    }
+
+    .kiosk-btn {
+        width: auto;
+        min-width: 0;
+        padding: 15px 12px;
+
+        font-size: 13px;
+    }
+}

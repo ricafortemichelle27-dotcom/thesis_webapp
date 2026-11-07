@@ -1,19 +1,24 @@
+import Notification from '../../components/Notification/Notification.jsx';
 ﻿import { useState, useEffect } from "react";
 
 import {
     FontAwesomeIcon,
-    faSearch,
-    faCheck,
+    faMagnifyingGlass,
+    faCircleCheck,
+    faXmark,
     faTrash,
+    faPenToSquare,
     faEye,
     faFilePdf,
     faCalendarDays,
     faClock,
-    faUser,
+    faUserShield,
 } from "../../utils/icons.js";
 
 import { getCurrentUser } from "../../utils/cookiesUtils.js";
 import AddEvent from "../../components/Modal/AddEvent/AddEvent.jsx";
+import HistoryOfEvents from "../../components/Modal/HistoryOfEvents/HistoryOfEvents.jsx";
+import ViewEventModal from "../../components/Modal/ViewEvent/ViewEvent.jsx";
 import { apiBaseUrl, apiUrl } from "../../utils/api.js";
 
 import "./Events.css";
@@ -51,9 +56,12 @@ function Events() {
 
     const [searchTerm, setSearchTerm] = useState("");
     const [isAddEventOpen, setIsAddEventOpen] = useState(false);
+    const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+    const [viewEvent, setViewEvent] = useState(null);
     const [events, setEvents] = useState([]);
     const [isLoadingEvents, setIsLoadingEvents] = useState(true);
     const [eventsError, setEventsError] = useState("");
+    const [successMessage, setSuccessMessage] = useState('');
     const [editingEvent, setEditingEvent] = useState(null);
     const [declineTargetEvent, setDeclineTargetEvent] = useState(null);
     const [declineReason, setDeclineReason] = useState("");
@@ -246,6 +254,26 @@ function Events() {
         });
     };
 
+    // Archive by Philippine calendar date, regardless of approval status.
+    const [today, setToday] = useState(() => new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit',
+    }).format(new Date()));
+
+    useEffect(() => {
+        const updateDay = () => setToday(new Intl.DateTimeFormat('en-CA', {
+            timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit',
+        }).format(new Date()));
+        const timer = setInterval(updateDay, 30000);
+        window.addEventListener('focus', updateDay);
+        return () => { clearInterval(timer); window.removeEventListener('focus', updateDay); };
+    }, []);
+
+    const isPastEvent = (event) => {
+        const date = event.eventDate || event.event_date;
+        return Boolean(date && date.slice(0, 10) < today);
+    };
+    const isCurrentApprovedEvent = (event) => event.status === 'approved' && !isPastEvent(event);
+
     const summarizeEligibility = (eligibility = []) => {
         const departments = [
             ...new Set(
@@ -307,24 +335,19 @@ function Events() {
 
             const normalizedEvents = await Promise.all(
                 rawEvents.map(async (event) => {
-                    let eligibility = [];
-
-                    try {
-                        const eligibilityResponse = await fetch(
-                            apiUrl(`/api/events/${event.id}/eligibility`)
-                        );
-                        const eligibilityData = await eligibilityResponse.json();
-
-                        eligibility = Array.isArray(eligibilityData.eligibility)
-                            ? eligibilityData.eligibility
-                            : [];
-                    } catch {
-                        eligibility = [];
+                    const eligibilityResponse = await fetch(
+                        apiUrl(`/api/events/${event.id}/eligibility`)
+                    );
+                    const eligibilityData = await eligibilityResponse.json();
+                    if (!eligibilityResponse.ok || !Array.isArray(eligibilityData.eligibility)) {
+                        throw new Error(eligibilityData.message || 'Unable to load event eligibility.');
                     }
+                    const eligibility = eligibilityData.eligibility;
 
                     const eligibilitySummary = summarizeEligibility(eligibility);
 
                     return {
+                        ...event,
                         id: event.id,
                         eventAdminId: event.event_admin_id,
                         name: event.event_name || event.name || "Untitled Event",
@@ -334,6 +357,7 @@ function Events() {
                         yearLevel: eligibilitySummary.yearLevel,
                         eventDate: event.event_date || event.date || "",
                         date: formatDisplayDate(event.event_date || event.date),
+                        location: event.location || event.event_location || "—",
                         timeStart: event.time_start || event.timeIn || "",
                         timeIn: formatDisplayTime(event.time_start || event.timeIn),
                         timeEnd: event.time_end || event.timeOut || "",
@@ -364,7 +388,23 @@ function Events() {
         fetchEvents();
     }, []);
 
+    const historyEvents = events.filter((event) => {
+        if (isEventAdmin) {
+            const belongsToCurrentAdmin =
+                Number(event.eventAdminId) === Number(user?.id) ||
+                (!event.eventAdminId &&
+                    event.admin.toLowerCase() === currentAdminName.toLowerCase());
+
+            if (!belongsToCurrentAdmin) {
+                return false;
+            }
+        }
+
+        return isPastEvent(event);
+    });
+
     const filteredEvents = events.filter((event) => {
+        if (isPastEvent(event)) return false;
         if (isEventAdmin) {
             const belongsToCurrentAdmin =
                 Number(event.eventAdminId) === Number(user?.id) ||
@@ -378,6 +418,10 @@ function Events() {
 
         if ((isSystemAdmin || isEventAdmin) && activeTab !== "all") {
             if (event.status !== activeTab) {
+                return false;
+            }
+
+            if (activeTab === "approved" && !isCurrentApprovedEvent(event)) {
                 return false;
             }
         }
@@ -401,21 +445,22 @@ function Events() {
        EVENT COUNTS
     ========================= */
 
+    const activeEvents = events.filter((event) => !isPastEvent(event));
     const visibleEvents = isEventAdmin
-        ? events.filter(
+        ? activeEvents.filter(
               (event) =>
                   Number(event.eventAdminId) === Number(user?.id) ||
                   (!event.eventAdminId &&
                       event.admin.toLowerCase() === currentAdminName.toLowerCase())
           )
-        : events;
+        : activeEvents;
 
     const pendingCount = visibleEvents.filter(
         (event) => event.status === "pending"
     ).length;
 
     const approvedCount = visibleEvents.filter(
-        (event) => event.status === "approved"
+        (event) => isCurrentApprovedEvent(event)
     ).length;
 
     const declinedCount = visibleEvents.filter(
@@ -496,6 +541,7 @@ function Events() {
         formData.append("event_admin_id", String(userId));
         formData.append("requested_by_user_id", String(userId));
         formData.append("event_date", eventData.date);
+        formData.append("location", eventData.location);
         formData.append("time_start", formatTime(eventData.time.starts));
         formData.append("time_end", formatTime(eventData.time.ends));
         formData.append(
@@ -539,7 +585,8 @@ function Events() {
 
         setEditingEvent(null);
         setIsAddEventOpen(false);
-        await fetchEvents();
+        setSuccessMessage(existingEvent ? 'Event updated Successfully' : 'Event Added Successfully');
+        void fetchEvents();
         setActiveTab(isSystemAdmin ? "pending" : "all");
 
         return data;
@@ -568,13 +615,38 @@ function Events() {
        VIEW EVENT
     ========================= */
 
-    const handleViewEvent = (id) => {
-        console.log("View event:", id);
+    const handleViewEvent = async (event) => {
+        setSuccessMessage('');
+        try {
+            const response = await fetch(apiUrl(`/api/events/${event.id}`));
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || 'Unable to load event.');
+            setViewEvent(data.event);
+        } catch (error) {
+            setEventsError(error.message);
+        }
+    };
+
+    const handleSaveKioskSettings = async (eventId, formData) => {
+        const userId = user?.id || user?.user_id;
+        if (!userId) throw new Error('Current user information is missing.');
+        formData.append('requested_by_user_id', String(userId));
+        const response = await fetch(apiUrl(`/api/events/${eventId}/configuration`), {
+            method: 'PUT', body: formData,
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || 'Unable to save event configuration.');
+        setViewEvent(null);
+        setSuccessMessage('Kiosk Settings is saved Successfully');
+        await fetchEvents();
+        return data.event;
     };
 
 
     return (
         <div className="event-management">
+
+            <Notification message={successMessage} onDismiss={() => setSuccessMessage('')} />
 
             {eventsError && (
                 <div className="event-error-banner">
@@ -612,7 +684,7 @@ function Events() {
                     <div className="event-stat-card approved-stat">
 
                         <div className="stat-icon">
-                            <FontAwesomeIcon icon={faCheck} />
+                            <FontAwesomeIcon icon={faCircleCheck} />
                         </div>
 
                         <div>
@@ -726,21 +798,32 @@ function Events() {
                         </div>
 
 
-                        <div className="event-search">
+                        <div className="event-toolbar-actions">
+                            <div className="event-search">
 
-                            <FontAwesomeIcon icon={faSearch} />
+                                <FontAwesomeIcon icon={faMagnifyingGlass} />
 
-                            <input
-                                type="text"
-                                placeholder="Search events or admin..."
-                                value={searchTerm}
-                                onChange={(e) =>
-                                    setSearchTerm(
-                                        e.target.value
-                                    )
-                                }
-                            />
+                                <input
+                                    type="text"
+                                    placeholder="Search events or admin..."
+                                    value={searchTerm}
+                                    onChange={(e) =>
+                                        setSearchTerm(
+                                            e.target.value
+                                        )
+                                    }
+                                />
 
+                            </div>
+
+                            <button
+                                type="button"
+                                className="history-btn"
+                                onClick={() => setIsHistoryOpen(true)}
+                            >
+                                <span aria-hidden="true">⏱</span>
+                                History
+                            </button>
                         </div>
 
                     </div>
@@ -825,20 +908,42 @@ function Events() {
                         </div>
 
 
-                        <div className="event-search">
+                        <div className="event-toolbar-actions">
 
-                            <FontAwesomeIcon icon={faSearch} />
+                            <div className="event-search">
 
-                            <input
-                                type="text"
-                                placeholder="Search your events..."
-                                value={searchTerm}
-                                onChange={(e) =>
-                                    setSearchTerm(
-                                        e.target.value
-                                    )
-                                }
-                            />
+                                <FontAwesomeIcon icon={faMagnifyingGlass} />
+
+                                <input
+                                    type="text"
+                                    placeholder="Search your events..."
+                                    value={searchTerm}
+                                    onChange={(e) =>
+                                        setSearchTerm(
+                                            e.target.value
+                                        )
+                                    }
+                                />
+
+                            </div>
+
+                            <button
+                                type="button"
+                                className="add-event-btn"
+                                onClick={handleAddEvent}
+                            >
+                                <span aria-hidden="true">+</span>
+                                Add Event
+                            </button>
+
+                            <button
+                                type="button"
+                                className="history-btn history-btn-gold"
+                                onClick={() => setIsHistoryOpen(true)}
+                            >
+                                <span aria-hidden="true">⏱</span>
+                                History
+                            </button>
 
                         </div>
 
@@ -874,6 +979,8 @@ function Events() {
 
                                 <th>Time Start-End</th>
 
+                                <th>Location</th>
+
                                 <th>Letter of Approval</th>
 
                                 <th>Certificate Template</th>
@@ -899,8 +1006,8 @@ function Events() {
                                     <td
                                         colSpan={
                                             isSystemAdmin
-                                                ? 7
-                                                : 5
+                                                ? 8
+                                                : 7
                                         }
                                         className="no-events"
                                     >
@@ -1007,7 +1114,7 @@ function Events() {
                                                     <div className="admin-icon">
 
                                                         <FontAwesomeIcon
-                                                            icon={faUser}
+                                                            icon={faUserShield}
                                                         />
 
                                                     </div>
@@ -1087,6 +1194,15 @@ function Events() {
 
 
                                         {/* =====================
+                                            LOCATION
+                                        ===================== */}
+
+                                        <td>
+                                            {event.location}
+                                        </td>
+
+
+                                        {/* =====================
                                             LETTER OF APPROVAL
                                         ===================== */}
 
@@ -1160,11 +1276,11 @@ function Events() {
                                                         <button
                                                             type="button"
                                                             className="view-btn"
+                                                            aria-label="View Event"
+
                                                             title="View Event"
                                                             onClick={() =>
-                                                                handleViewEvent(
-                                                                    event.id
-                                                                )
+                                                                handleViewEvent(event)
                                                             }
                                                         >
 
@@ -1179,112 +1295,79 @@ function Events() {
                                                     )}
 
 
-                                                    {isSystemAdmin && event.status ===
-                                                        "pending" && (
-
+                                                    {isSystemAdmin && event.status === "pending" && (
                                                         <>
                                                             <button
                                                                 type="button"
-                                                                className="approve-btn"
+                                                                className="approve-btn review-action-btn"
+                                                                aria-label="Approve Event"
                                                                 title="Approve Event"
-                                                                onClick={() =>
-                                                                    handleApprove(
-                                                                        event.id
-                                                                    )
-                                                                }
+                                                                onClick={() => handleApprove(event.id)}
                                                             >
-
-                                                                <FontAwesomeIcon
-                                                                    icon={
-                                                                        faCheck
-                                                                    }
-                                                                />
-
+                                                                <FontAwesomeIcon icon={faCircleCheck} />
+                                                                <span>Approve</span>
                                                             </button>
-
                                                             <button
                                                                 type="button"
-                                                                className="delete-btn"
+                                                                className="delete-btn review-action-btn"
+                                                                aria-label="Decline Event"
                                                                 title="Decline Event"
-                                                                onClick={() =>
-                                                                    handleDeclineClick(
-                                                                        event
-                                                                    )
-                                                                }
+                                                                onClick={() => handleDeclineClick(event)}
                                                             >
-
-                                                                <FontAwesomeIcon
-                                                                    icon={
-                                                                        faTrash
-                                                                    }
-                                                                />
-
+                                                                <FontAwesomeIcon icon={faXmark} />
+                                                                <span>Decline</span>
                                                             </button>
                                                         </>
-
                                                     )}
 
+                                                   {/* =========================
+                                                        EVENT ADMIN ACTIONS
+                                                    ========================= */}
 
                                                     {isEventAdmin && (
-                                                        (event.status ===
-                                                            "pending" ||
-                                                            event.status ===
-                                                            "declined") && (
-                                                            <>
+                                                        <>
+                                                            {/* PENDING / DECLINED EVENTS */}
+                                                            {(event.status === "pending" ||
+                                                                event.status === "declined") && (
+                                                                <>
+                                                                    <button
+                                                                        type="button"
+                                                                        className="view-btn"
+                                                                        aria-label="Edit Event"
+
+                                                                        title="Edit Event"
+                                                                        onClick={() => handleEditEvent(event)}
+                                                                    >
+                                                                        <FontAwesomeIcon icon={faPenToSquare} />
+                                                                    </button>
+
+                                                                    <button
+                                                                        type="button"
+                                                                        className="delete-btn"
+                                                                        aria-label="Delete Event"
+
+                                                                        title="Delete Event"
+                                                                        onClick={() => handleDelete(event.id)}
+                                                                    >
+                                                                        <FontAwesomeIcon icon={faTrash} />
+                                                                    </button>
+                                                                </>
+                                                            )}
+
+                                                            {/* APPROVED EVENTS */}
+                                                            {event.status === "approved" && (
                                                                 <button
                                                                     type="button"
                                                                     className="view-btn"
-                                                                    title="Edit Event"
-                                                                    onClick={() =>
-                                                                        handleEditEvent(
-                                                                            event
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    Edit
-                                                                </button>
+                                                                    aria-label="View Event"
 
-                                                                <button
-                                                                    type="button"
-                                                                    className="delete-btn"
-                                                                    title="Delete Event"
-                                                                    onClick={() =>
-                                                                        handleDelete(
-                                                                            event.id
-                                                                        )
-                                                                    }
+                                                                    title="View Event"
+                                                                    onClick={() => handleViewEvent(event)}
                                                                 >
-                                                                    Delete
-                                                                </button>
-                                                            </>
-                                                        )
+                                                                    <FontAwesomeIcon icon={faEye} />                                                                </button>
+                                                            )}
+                                                        </>
                                                     )}
-
-
-                                                    {isSystemAdmin && (
-                                                        (event.status ===
-                                                            "pending" ||
-                                                            event.status ===
-                                                            "declined") && (
-                                                        <button
-                                                            type="button"
-                                                            className="delete-btn"
-                                                            title="Delete Event"
-                                                            onClick={() =>
-                                                                handleDelete(
-                                                                    event.id
-                                                                )
-                                                            }
-                                                        >
-
-                                                            <FontAwesomeIcon
-                                                                icon={
-                                                                    faTrash
-                                                                }
-                                                            />
-
-                                                        </button>
-                                                    ))}
 
                                                 </div>
 
@@ -1303,8 +1386,8 @@ function Events() {
                                     <td
                                         colSpan={
                                             isSystemAdmin
-                                                ? 7
-                                                : 5
+                                                ? 8
+                                                : 7
                                         }
                                         className="no-events"
                                     >
@@ -1362,6 +1445,13 @@ function Events() {
 
                 </div>
 
+                <HistoryOfEvents
+                    isOpen={isHistoryOpen}
+                    onClose={() => setIsHistoryOpen(false)}
+                    events={historyEvents}
+                    isSystemAdmin={isSystemAdmin}
+                />
+
                 <AddEvent
                     isOpen={isAddEventOpen}
                     onClose={() => {
@@ -1371,17 +1461,26 @@ function Events() {
                     onCreate={handleCreateEvent}
                     existingEvent={editingEvent}
                 />
+
+                <ViewEventModal
+                    key={viewEvent?.id || 'closed'}
+                    isOpen={Boolean(viewEvent)}
+                    event={viewEvent}
+                    isEventAdmin={isEventAdmin}
+                    onClose={() => setViewEvent(null)}
+                    onSaveKioskSettings={handleSaveKioskSettings}
+                />
             </div>
 
             {declineTargetEvent && (
                 <div className="decline-modal-backdrop">
-                    <div className="decline-modal">
+                    <div className="decline-modal" role="dialog" aria-modal="true" aria-labelledby="decline-modal-title">
                         <div className="decline-modal-header">
-                            <h3>Decline Event</h3>
+                            <h3 id="decline-modal-title">Decline Event</h3>
                         </div>
 
                         <p className="decline-modal-message">
-                            Please provide a reason for declining this event.
+                            Please provide a reason for declining "{declineTargetEvent.name}".
                         </p>
 
                         <label className="decline-modal-label" htmlFor="decline-reason">
@@ -1390,6 +1489,9 @@ function Events() {
 
                         <textarea
                             id="decline-reason"
+                            required
+                            autoFocus
+                            aria-invalid={Boolean(declineError)}
                             className="decline-modal-input"
                             value={declineReason}
                             onChange={(e) => {
